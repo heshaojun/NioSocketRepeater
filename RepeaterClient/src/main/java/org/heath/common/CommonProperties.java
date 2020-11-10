@@ -15,6 +15,7 @@ public class CommonProperties {
 
     public static volatile byte[] clientAESKey = null;
     public static volatile byte[] serverAESKey = null;
+    public static volatile String msgClientId = "";
 
 
     public static final int KEY_TYPE = 1 << 1;
