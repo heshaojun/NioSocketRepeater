@@ -38,10 +38,16 @@ public class AESUtils {
         return result;
     }
 
-    public static byte[] generateKey() throws Exception {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(128);
-        return keyGenerator.generateKey().getEncoded();
+    public static byte[] generateKey() {
+        byte[] result = null;
+        try {
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(128);
+            result = keyGenerator.generateKey().getEncoded();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }
