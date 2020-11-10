@@ -39,7 +39,9 @@ public class MsgPackageUtils {
             byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.RSA_KEY);
             dataStr = Base64Utils.encodeToString(encrypted);
             dataStr = HEADER + SPLIT + dataStr + SPLIT;
-            dataStr.getBytes().length;
+            if (dataStr.getBytes().length<CommonProperties.PACKAGE_SIZE){
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
