@@ -12,10 +12,10 @@ import java.io.File;
  */
 public class CertificateCreateTest {
     public static void main(String[] args) {
-        CertificateUtils.generateCer("rsa", "heath_1991");
-        byte[] pubKey = CertificateUtils.loadKey("rsa.pub", "heath_1991");
-        byte[] priKey = CertificateUtils.loadKey("rsa.pri", "heath_1991");
-        String context = "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈";
+        CertificateUtils.generateCer("rsa", "12345678");
+        byte[] pubKey = CertificateUtils.loadKey("rsa.pub", "12345678");
+        byte[] priKey = CertificateUtils.loadKey("rsa.pri", "12345678");
+        String context = "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈";
         byte[] encryptedBytes = RSAUtils.encrypt(context.getBytes(), RSAUtils.getPubKey(pubKey));
         byte[] decryptedBytes = RSAUtils.decrypt(encryptedBytes, RSAUtils.getPriKey(priKey));
         System.out.println(new String(decryptedBytes));

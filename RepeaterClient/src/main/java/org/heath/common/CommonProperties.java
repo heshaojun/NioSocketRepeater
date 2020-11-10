@@ -1,5 +1,8 @@
 package org.heath.common;
 
+import org.heath.utils.CertificateUtils;
+import org.heath.utils.RSAUtils;
+
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -10,8 +13,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class CommonProperties {
 
 
-    public static volatile byte[] clientDesKey = null;
-    public static volatile byte[] serverDesKey = null;
+    public static volatile byte[] clientAESKey = null;
+    public static volatile byte[] serverAESKey = null;
 
 
     public static final int KEY_TYPE = 1 << 1;
@@ -31,5 +34,7 @@ public class CommonProperties {
     public static final int DOCK_PORT = Integer.valueOf(System.getProperty("dock.port", "9999"));
     public static final String TARGET_IP = System.getProperty("target.ip", "127.0.0.1");
     public static final int TARGET_PORT = Integer.valueOf(System.getProperty("target.port", "8080"));
+    public static final byte[] RSA_KEY = CertificateUtils.loadKey(System.getProperty("cert.filename", "rsa.pub"), System.getProperty("cert.password", "12345678"));
+
 
 }

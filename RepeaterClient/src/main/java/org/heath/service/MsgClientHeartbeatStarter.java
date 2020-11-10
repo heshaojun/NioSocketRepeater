@@ -17,7 +17,10 @@ public class MsgClientHeartbeatStarter {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!CommonStatus.isMsgClientAlive) return;
+                if (!CommonStatus.isMsgClientAlive) {
+                    CommonProperties.CLIENT_MSG_QUEUE.clear();
+                    return;
+                }
                 byte[] heartbeat = MsgPackageUtils.generateHeartbeat();
                 try {
                     CommonProperties.CLIENT_MSG_QUEUE.put(heartbeat);

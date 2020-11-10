@@ -1,5 +1,8 @@
 package org.heath.utils;
 
+import org.heath.common.CommonProperties;
+
+import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -21,15 +24,34 @@ public class MsgPackageUtils {
         FILLER = builder.toString();
     }
 
-    public static byte[] packDataWithEncrypt(byte[] data, int type) {
+    public static byte[] packAuthData(Hashtable<String, String> data) {
+        byte[] result = null;
+        try {
+            StringBuilder builder = new StringBuilder();
+            for (Map.Entry<String, String> entry : data.entrySet()) {
+                builder.append(entry.getKey());
+                builder.append(":");
+                builder.append(entry.getValue());
+                builder.append(SPLIT);
+            }
+            String dataStr = builder.toString();
+            byte[] dataBytes = dataStr.getBytes("UTF-8");
+            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.RSA_KEY);
+            dataStr = Base64Utils.encodeToString(encrypted);
+            dataStr = HEADER + SPLIT + dataStr + SPLIT;
+            dataStr.getBytes().length;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static byte[] packData(Map<String, String> data) {
         return null;
     }
 
-    public static byte[] packData(byte[] data, int type) {
-        return null;
-    }
-
-    public static Map<String, Object> unpackDataWithEncrypt(byte[] data) {
+    public static Map<String, Object> packAuthDate(byte[] data) {
         return null;
     }
 
