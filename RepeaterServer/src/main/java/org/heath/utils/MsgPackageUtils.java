@@ -26,7 +26,7 @@ public class MsgPackageUtils {
         FILLER = builder.toString();
     }
 
-    public static byte[] packAuthData(Hashtable<String, String> data) {
+    public static byte[] packAuthData(Hashtable<String, String> data, String msgClientId) {
         byte[] result = null;
         try {
             StringBuilder builder = new StringBuilder();
@@ -40,7 +40,7 @@ public class MsgPackageUtils {
             byte[] dataBytes = dataStr.getBytes("UTF-8");
             byte[] encrypted = RSAUtils.encrypt(dataBytes, RSAUtils.getPubKey(CommonProperties.RSA_KEY));
             dataStr = Base64Utils.encodeToString(encrypted);
-            dataStr = HEADER + SPLIT + CommonProperties.msgClientId + SPLIT + dataStr + SPLIT;
+            dataStr = HEADER + SPLIT + msgClientId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
             if (len > CommonProperties.PACKAGE_SIZE) return null;
             if (len < CommonProperties.PACKAGE_SIZE) {
@@ -53,7 +53,7 @@ public class MsgPackageUtils {
         return result;
     }
 
-    public static byte[] packData(Map<String, String> data) {
+    public static byte[] packData(Map<String, String> data, String msgClientId) {
         byte[] result = null;
         try {
             StringBuilder builder = new StringBuilder();
@@ -65,9 +65,9 @@ public class MsgPackageUtils {
             }
             String dataStr = builder.toString();
             byte[] dataBytes = dataStr.getBytes("UTF-8");
-            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.serverAESKey);
+            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.CLIENT_AES_KEY_MAP.get(msgClientId));
             dataStr = Base64Utils.encodeToString(encrypted);
-            dataStr = HEADER + SPLIT + CommonProperties.msgClientId + SPLIT + dataStr + SPLIT;
+            dataStr = HEADER + SPLIT + msgClientId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
             if (len > CommonProperties.PACKAGE_SIZE) return null;
             if (len < CommonProperties.PACKAGE_SIZE) {
@@ -124,7 +124,7 @@ public class MsgPackageUtils {
                     result = null;
                 } else {
                     byte[] dataBytes = Base64Utils.decode(dataStr);
-                    dataBytes = AESUtils.decrypt(dataBytes, CommonProperties.clientAESKey);
+                    dataBytes = AESUtils.decrypt(dataBytes, CommonProperties.SERVER_AES_KEY_MAP.get(serverId));
                     String str = new String(dataBytes, "UTF-8");
                     for (String s : str.split(SPLIT)) {
                         if (s.contains(K_V_SPLIT)) {
