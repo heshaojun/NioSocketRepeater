@@ -19,9 +19,8 @@ public class CommonProperties {
     public static volatile String msgServerId = "";
 
 
-
-
-    public static final int PACKAGE_SIZE = Integer.valueOf(System.getProperty("package.size", "500"));
+    public static final int PACKAGE_SIZE = Integer.valueOf(System.getProperty("package.size", "300"));
+    public static final int AUTH_PACKAGE_SIZE = Integer.valueOf(System.getProperty("auth.size", "800"));
     public static final String SERVER_IP = System.getProperty("server.ip", "127.0.0.1");
     public static final int MSG_PORT = Integer.valueOf(System.getProperty("msg.port", "8888"));
     public static final int DOCK_PORT = Integer.valueOf(System.getProperty("dock.port", "9999"));

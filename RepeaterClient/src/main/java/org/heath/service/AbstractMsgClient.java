@@ -1,5 +1,6 @@
 package org.heath.service;
 
+import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 import org.heath.common.CommonStatus;
 import sun.nio.ch.DirectBuffer;
@@ -32,8 +33,8 @@ public abstract class AbstractMsgClient implements IMsgClient {
             channel = SocketChannel.open();
             selector = Selector.open();
             channel.connect(new InetSocketAddress(CommonProperties.SERVER_IP, CommonProperties.MSG_PORT));
-            CommonProperties.SERVER_MSG_QUEUE.clear();
-            CommonProperties.CLIENT_MSG_QUEUE.clear();
+            CommonConst.SERVER_MSG_QUEUE.clear();
+            CommonConst.CLIENT_MSG_QUEUE.clear();
             if (auth(channel)) {
                 channel.configureBlocking(false);
                 channel.register(selector, SelectionKey.OP_READ);
@@ -84,16 +85,12 @@ public abstract class AbstractMsgClient implements IMsgClient {
 
     private boolean auth(SocketChannel channel) {
         if (verify(channel)) {
-            if (exchangeKey(channel)) {
-                return true;
-            }
         }
         return false;
     }
 
     protected abstract boolean verify(SocketChannel channel);
 
-    protected abstract boolean exchangeKey(SocketChannel channel);
 
     protected abstract void handleServerMsg(byte[] data);
 

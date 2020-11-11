@@ -43,9 +43,9 @@ public class MsgPackageUtils {
             dataStr = Base64Utils.encodeToString(encrypted);
             dataStr = HEADER + SPLIT + CommonProperties.msgClientId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
-            if (len > CommonProperties.PACKAGE_SIZE) return null;
-            if (len < CommonProperties.PACKAGE_SIZE) {
-                dataStr += FILLER.substring(0, CommonProperties.PACKAGE_SIZE - len);
+            if (len > CommonProperties.AUTH_PACKAGE_SIZE) return null;
+            if (len < CommonProperties.AUTH_PACKAGE_SIZE) {
+                dataStr += FILLER.substring(0, CommonProperties.AUTH_PACKAGE_SIZE - len);
                 result = dataStr.getBytes();
             }
         } catch (Exception e) {
