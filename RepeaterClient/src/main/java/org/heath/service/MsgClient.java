@@ -119,6 +119,7 @@ public class MsgClient extends AbstractMsgClient {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                log.error("写入消息异常", e);
             } finally {
                 try {
                     channel.close();
