@@ -39,6 +39,7 @@ public abstract class AbstractMsgClient implements IMsgClient {
                 channel.configureBlocking(false);
                 channel.register(selector, SelectionKey.OP_READ);
                 startupClientMsgWriter(channel);
+                CommonStatus.isIsMsgClientWorking = true;
                 while (true) {
                     if (!CommonStatus.isMsgClientAlive) break;
                     if (selector.select(100) == 0) continue;
@@ -68,6 +69,7 @@ public abstract class AbstractMsgClient implements IMsgClient {
             e.printStackTrace();
         } finally {
             CommonStatus.isMsgClientAlive = false;
+            CommonStatus.isIsMsgClientWorking = false;
             try {
                 if (channel != null) channel.close();
             } catch (Exception e) {

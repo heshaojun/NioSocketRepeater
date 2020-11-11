@@ -8,7 +8,7 @@ package org.heath.common;
 public class CommonStatus {
     public static volatile MsgClientStatus msgClientStatus = MsgClientStatus.HEALTH; //消息客户端状态
     public static volatile boolean isMsgClientAlive = false;//消息客户端存活状态
-
+    public static volatile boolean isIsMsgClientWorking = false;
     public static volatile boolean isRepeaterAlive = false;//中继器线程存活状态
 
 

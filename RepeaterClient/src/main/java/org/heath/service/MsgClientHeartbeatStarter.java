@@ -18,7 +18,7 @@ public class MsgClientHeartbeatStarter {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!CommonStatus.isMsgClientAlive) {
+                if (!CommonStatus.isIsMsgClientWorking) {
                     CommonConst.CLIENT_MSG_QUEUE.clear();
                     return;
                 }
