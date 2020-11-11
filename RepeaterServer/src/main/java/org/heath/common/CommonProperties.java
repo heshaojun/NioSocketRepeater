@@ -1,5 +1,7 @@
 package org.heath.common;
 
+import org.heath.utils.CertificateUtils;
+
 import java.nio.channels.SocketChannel;
 import java.util.Hashtable;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -34,7 +36,7 @@ public class CommonProperties {
     public static final int DOCK_PORT = Integer.valueOf(System.getProperty("dock.port", "9999"));
     public static final String TARGET_IP = System.getProperty("target.ip", "127.0.0.1");
     public static final int TARGET_PORT = Integer.valueOf(System.getProperty("target.port", "8080"));
-    public static final byte[] RSA_KEY = CertificateUtils.loadKey(System.getProperty("cert.filename", "rsa.pri"), System.getProperty("cert.password", "12345678"));
+    public static final byte[] RSA_KEY = CertificateUtils.loadKey(System.getProperty("cert.filename", "rsa.pub"), System.getProperty("cert.password", "12345678"));
 
 
 }
