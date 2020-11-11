@@ -6,12 +6,11 @@ package org.heath.service;
  * @description TODO
  */
 public class ServerMsgHandler {
-    public void handleMsg() {
+
+
+    public void handleDock(String id) {
     }
 
-    private void handleDock(byte[] key) {
-    }
-
-    private void handleCMD(byte[] command) {
+    public void handleCMD(String command) {
     }
 }

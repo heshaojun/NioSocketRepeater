@@ -1,5 +1,6 @@
 package org.heath.service;
 
+import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 import org.heath.common.CommonStatus;
 import sun.nio.ch.DirectBuffer;
@@ -30,7 +31,7 @@ public class MsgClient extends AbstractMsgClient {
     public void handleServerMsg(byte[] data) {
         if (!CommonStatus.isMsgClientAlive) return;
         try {
-            CommonProperties.SERVER_MSG_QUEUE.put(data);
+            CommonConst.SERVER_MSG_QUEUE.put(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +44,7 @@ public class MsgClient extends AbstractMsgClient {
             try {
                 while (true) {
                     if (!CommonStatus.isMsgClientAlive) break;
-                    byte[] data = CommonProperties.CLIENT_MSG_QUEUE.take();
+                    byte[] data = CommonConst.CLIENT_MSG_QUEUE.take();
                     buffer.clear();
                     buffer.put(data);
                     buffer.flip();

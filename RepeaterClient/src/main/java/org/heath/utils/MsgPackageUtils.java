@@ -1,5 +1,6 @@
 package org.heath.utils;
 
+import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 
 import java.util.Hashtable;
@@ -87,7 +88,7 @@ public class MsgPackageUtils {
             if (context.startsWith(HEADER)) {
                 String serverId = (context.split(SPLIT))[1];
                 String dataStr = (context.split(SPLIT))[2];
-                result.put("serverId", serverId);
+                result.put(CommonConst.SERVER_ID, serverId);
                 if (dataStr.contains(FILER)) {
                     result = null;
                 } else {
@@ -119,7 +120,7 @@ public class MsgPackageUtils {
             if (context.startsWith(HEADER)) {
                 String serverId = (context.split(SPLIT))[1];
                 String dataStr = (context.split(SPLIT))[2];
-                result.put("serverId", serverId);
+                result.put(CommonConst.SERVER_ID, serverId);
                 if (dataStr.contains(FILER)) {
                     result = null;
                 } else {

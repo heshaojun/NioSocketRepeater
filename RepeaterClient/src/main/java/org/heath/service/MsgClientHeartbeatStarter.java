@@ -1,11 +1,11 @@
 package org.heath.service;
 
+import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 import org.heath.common.CommonStatus;
 import org.heath.utils.MsgPackageUtils;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * @author heshaojun
@@ -14,20 +14,23 @@ import java.util.TimerTask;
  */
 public class MsgClientHeartbeatStarter {
     public void startup() {
+        Hashtable<String, String> msg = new Hashtable<>();
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!CommonStatus.isMsgClientAlive) {
-                    CommonProperties.CLIENT_MSG_QUEUE.clear();
+                    CommonConst.CLIENT_MSG_QUEUE.clear();
                     return;
                 }
-                byte[] heartbeat = MsgPackageUtils.generateHeartbeat();
+                msg.put(CommonConst.TYPE, CommonConst.HEARTBEAT_TYPE);
+                msg.put(CommonConst.HEARTBEAT, "" + new Date().getTime());
+                byte[] heartbeat = MsgPackageUtils.packData(msg);
                 try {
-                    CommonProperties.CLIENT_MSG_QUEUE.put(heartbeat);
+                    CommonConst.CLIENT_MSG_QUEUE.put(heartbeat);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }, 1000, 10 * 1000);
+        }, 500, 2 * 1000);
     }
 }
