@@ -1,5 +1,6 @@
 package org.heath.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 import org.heath.common.CommonStatus;
@@ -13,10 +14,12 @@ import java.util.concurrent.CompletableFuture;
  * @date 2020/11/9
  * @description TODO
  */
+@Log4j2
 public class ServerMsgHandlerStarter {
     ServerMsgHandler handler = new ServerMsgHandler();
 
     public void startup() {
+        log.info("启动服务器消息处理器启动线程");
         new Thread(() -> {
             while (true) {
                 try {
@@ -28,6 +31,7 @@ public class ServerMsgHandlerStarter {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    log.error("读取服务器消息队列中到消息异常", e);
                 }
             }
         }).start();
@@ -35,6 +39,7 @@ public class ServerMsgHandlerStarter {
 
     private void handleData(byte[] data) {
         Hashtable<String, String> dataMap = MsgPackageUtils.unpackData(data);
+        log.debug("读取到来自服务器的消息：" + dataMap.toString());
         if (dataMap == null) {
             CommonStatus.msgClientStatus = CommonStatus.MsgClientStatus.BAD_DATA;
             return;
@@ -45,6 +50,7 @@ public class ServerMsgHandlerStarter {
         }
         switch (dataMap.get(CommonConst.TYPE)) {
             case CommonConst.DOCK_TYPE:
+                log.debug("读取到到消息为对接类型消息");
                 try {
                     String id = dataMap.get(CommonConst.DOCK);
                     if (id == null || id == "") {

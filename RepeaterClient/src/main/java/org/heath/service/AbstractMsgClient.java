@@ -1,5 +1,6 @@
 package org.heath.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 import org.heath.common.CommonStatus;
@@ -22,9 +23,11 @@ import java.util.concurrent.CompletableFuture;
  * @Date 2020/11/08
  * @Description TODO
  */
+@Log4j2
 public abstract class AbstractMsgClient implements IMsgClient {
     @Override
     public void startup() {
+        log.info("开始启动消息客户端");
         CommonStatus.isMsgClientAlive = true;
         SocketChannel channel = null;
         Selector selector = null;
@@ -32,14 +35,20 @@ public abstract class AbstractMsgClient implements IMsgClient {
         try {
             channel = SocketChannel.open();
             selector = Selector.open();
+            log.info("消息客户端连接到消息服务器：" + CommonProperties.SERVER_IP + ":" + CommonProperties.MSG_PORT);
             channel.connect(new InetSocketAddress(CommonProperties.SERVER_IP, CommonProperties.MSG_PORT));
             CommonConst.SERVER_MSG_QUEUE.clear();
             CommonConst.CLIENT_MSG_QUEUE.clear();
+            log.info("开始进行安全认证和密钥交换");
             if (auth(channel)) {
+                log.info("安全认证和密钥交换正常完成");
                 channel.configureBlocking(false);
+                log.info("将消息客户端通道到读取事件注册到选择器上");
                 channel.register(selector, SelectionKey.OP_READ);
                 startupClientMsgWriter(channel);
                 CommonStatus.isIsMsgClientWorking = true;
+                CommonStatus.msgClientStatus = CommonStatus.MsgClientStatus.HEALTH;
+                log.info("开始轮训选择器");
                 while (true) {
                     if (!CommonStatus.isMsgClientAlive) break;
                     if (selector.select(100) == 0) continue;
@@ -67,6 +76,7 @@ public abstract class AbstractMsgClient implements IMsgClient {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            log.error("消息客户端运行异常", e);
         } finally {
             CommonStatus.isMsgClientAlive = false;
             CommonStatus.isIsMsgClientWorking = false;
@@ -87,6 +97,7 @@ public abstract class AbstractMsgClient implements IMsgClient {
 
     private boolean auth(SocketChannel channel) {
         if (verify(channel)) {
+            return true;
         }
         return false;
     }
