@@ -65,7 +65,7 @@ public class MsgPackageUtils {
             }
             String dataStr = builder.toString();
             byte[] dataBytes = dataStr.getBytes("UTF-8");
-            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.serverAESKey);
+            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.clientAESKey);
             dataStr = Base64Utils.encodeToString(encrypted);
             dataStr = HEADER + SPLIT + CommonProperties.msgClientId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
@@ -124,7 +124,7 @@ public class MsgPackageUtils {
                     result = null;
                 } else {
                     byte[] dataBytes = Base64Utils.decode(dataStr);
-                    dataBytes = AESUtils.decrypt(dataBytes, CommonProperties.clientAESKey);
+                    dataBytes = AESUtils.decrypt(dataBytes, CommonProperties.serverAESKey);
                     String str = new String(dataBytes, "UTF-8");
                     for (String s : str.split(SPLIT)) {
                         if (s.contains(K_V_SPLIT)) {

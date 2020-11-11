@@ -38,7 +38,7 @@ public class MsgPackageUtils {
             }
             String dataStr = builder.toString();
             byte[] dataBytes = dataStr.getBytes("UTF-8");
-            byte[] encrypted = RSAUtils.encrypt(dataBytes, RSAUtils.getPubKey(CommonProperties.RSA_KEY));
+            byte[] encrypted = RSAUtils.encrypt(dataBytes, RSAUtils.getPriKey(CommonProperties.RSA_KEY));
             dataStr = Base64Utils.encodeToString(encrypted);
             dataStr = HEADER + SPLIT + msgClientId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
@@ -65,7 +65,7 @@ public class MsgPackageUtils {
             }
             String dataStr = builder.toString();
             byte[] dataBytes = dataStr.getBytes("UTF-8");
-            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.CLIENT_AES_KEY_MAP.get(msgClientId));
+            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.SERVER_AES_KEY_MAP.get(msgClientId));
             dataStr = Base64Utils.encodeToString(encrypted);
             dataStr = HEADER + SPLIT + msgClientId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
@@ -92,7 +92,7 @@ public class MsgPackageUtils {
                     result = null;
                 } else {
                     byte[] dataBytes = Base64Utils.decode(dataStr);
-                    dataBytes = RSAUtils.decrypt(dataBytes, RSAUtils.getPubKey(CommonProperties.RSA_KEY));
+                    dataBytes = RSAUtils.decrypt(dataBytes, RSAUtils.getPriKey(CommonProperties.RSA_KEY));
                     String str = new String(dataBytes, "UTF-8");
                     for (String s : str.split(SPLIT)) {
                         if (s.contains(K_V_SPLIT)) {
@@ -124,7 +124,7 @@ public class MsgPackageUtils {
                     result = null;
                 } else {
                     byte[] dataBytes = Base64Utils.decode(dataStr);
-                    dataBytes = AESUtils.decrypt(dataBytes, CommonProperties.SERVER_AES_KEY_MAP.get(serverId));
+                    dataBytes = AESUtils.decrypt(dataBytes, CommonProperties.CLIENT_AES_KEY_MAP.get(serverId));
                     String str = new String(dataBytes, "UTF-8");
                     for (String s : str.split(SPLIT)) {
                         if (s.contains(K_V_SPLIT)) {
