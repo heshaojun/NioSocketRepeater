@@ -85,7 +85,15 @@ public class MsgServer extends AbstractServer {
             authDataMap.put(CommonConst.TOKEN, token);
             authDataMap.put(CommonConst.KEY, serverAESKey);
             byte[] dataBytes = MsgPackageUtils.packAuthData(authDataMap, serverId);
-
+            buffer.put(dataBytes);
+            buffer.flip();
+            log.info("向消息客户端写入认证数据");
+            for (int i = 0; i < 10000; i++) {
+                channel.write(buffer);
+                if (buffer.position() == buffer.limit()) break;
+                Thread.sleep(10);
+            }
+            if (buffer.position() != buffer.limit()) throw new IOException("写入到数据不完整");
             //读取token
             for (int i = 0; i < 10000; i++) {
                 if (channel.read(buffer) == -1) throw new IOException("read end");
@@ -98,9 +106,9 @@ public class MsgServer extends AbstractServer {
             buffer.get(data);
             Hashtable<String, String> dataMap = MsgPackageUtils.unpackAuthDate(data);
             if (dataMap == null) return false;
-            String token = dataMap.get(CommonConst.TOKEN);
-            String serverId = dataMap.get(CommonConst.SERVER_ID);
-            String serverKey = dataMap.get(CommonConst.KEY);
+            String readToken = dataMap.get(CommonConst.TOKEN);
+            String clientId = dataMap.get(CommonConst.CLIENT_ID);
+            String clientKey = dataMap.get(CommonConst.KEY);
             log.debug("解析读取到消息服务器到数据 token:" + token + "  serverId:" + serverId + "  serverKey:" + serverKey);
             if (token == null || "".equals(token) || serverId == null || "".equals(serverId) || serverKey == null || "".equals(serverKey))
                 return false;
@@ -118,15 +126,7 @@ public class MsgServer extends AbstractServer {
             log.debug("生成消息客户端到认证消息： clientId:" + clientId + "  clientKey:" + clientKey);
             if (data == null) return false;
             buffer.clear();
-            buffer.put(data);
-            buffer.flip();
-            log.info("向消息服务器写入认证数据");
-            for (int i = 0; i < 10000; i++) {
-                channel.write(buffer);
-                if (buffer.position() == buffer.limit()) break;
-                Thread.sleep(10);
-            }
-            if (buffer.position() != buffer.limit()) throw new IOException("写入到数据不完整");
+
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
