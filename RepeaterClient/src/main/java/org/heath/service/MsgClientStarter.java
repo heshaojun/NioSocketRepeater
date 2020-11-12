@@ -13,16 +13,16 @@ import java.util.TimerTask;
  */
 @Log4j2
 public class MsgClientStarter {
-    public void startup() {
+    public static void startup() {
         log.info("启动消息客户端启动线程");
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (CommonStatus.msgClientStatus != CommonStatus.MsgClientStatus.HEALTH) {
                     log.error("消息客户端状态异常，开始重置消息客户端生命状态");
-                    if (CommonStatus.isIsMsgClientWorking) {
+                    if (CommonStatus.isMsgClientWorking) {
                         CommonStatus.isMsgClientAlive = false;
-                        CommonStatus.isIsMsgClientWorking = false;
+                        CommonStatus.isMsgClientWorking = false;
                     }
                     return;
                 }

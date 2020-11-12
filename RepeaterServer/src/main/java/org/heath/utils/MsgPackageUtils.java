@@ -26,7 +26,7 @@ public class MsgPackageUtils {
         FILLER = builder.toString();
     }
 
-    public static byte[] packAuthData(Hashtable<String, String> data, String msgClientId) {
+    public static byte[] packAuthData(Hashtable<String, String> data, String msgServerId) {
         byte[] result = null;
         try {
             StringBuilder builder = new StringBuilder();
@@ -40,7 +40,7 @@ public class MsgPackageUtils {
             byte[] dataBytes = dataStr.getBytes("UTF-8");
             byte[] encrypted = RSAUtils.encrypt(dataBytes, RSAUtils.getPriKey(CommonProperties.RSA_KEY));
             dataStr = Base64Utils.encodeToString(encrypted);
-            dataStr = HEADER + SPLIT + msgClientId + SPLIT + dataStr + SPLIT;
+            dataStr = HEADER + SPLIT + msgServerId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
             if (len > CommonProperties.PACKAGE_SIZE) return null;
             if (len < CommonProperties.PACKAGE_SIZE) {
@@ -53,7 +53,7 @@ public class MsgPackageUtils {
         return result;
     }
 
-    public static byte[] packData(Map<String, String> data, String msgClientId) {
+    public static byte[] packData(Map<String, String> data, String msgServerId) {
         byte[] result = null;
         try {
             StringBuilder builder = new StringBuilder();
@@ -65,9 +65,9 @@ public class MsgPackageUtils {
             }
             String dataStr = builder.toString();
             byte[] dataBytes = dataStr.getBytes("UTF-8");
-            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.SERVER_AES_KEY_MAP.get(msgClientId));
+            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.SERVER_AES_KEY_MAP.get(msgServerId));
             dataStr = Base64Utils.encodeToString(encrypted);
-            dataStr = HEADER + SPLIT + msgClientId + SPLIT + dataStr + SPLIT;
+            dataStr = HEADER + SPLIT + msgServerId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
             if (len > CommonProperties.PACKAGE_SIZE) return null;
             if (len < CommonProperties.PACKAGE_SIZE) {
@@ -87,7 +87,7 @@ public class MsgPackageUtils {
             if (context.startsWith(HEADER)) {
                 String serverId = (context.split(SPLIT))[1];
                 String dataStr = (context.split(SPLIT))[2];
-                result.put("serverId", serverId);
+                result.put(CommonConst.CLIENT_ID, serverId);
                 if (dataStr.contains(FILER)) {
                     result = null;
                 } else {
@@ -119,7 +119,7 @@ public class MsgPackageUtils {
             if (context.startsWith(HEADER)) {
                 String serverId = (context.split(SPLIT))[1];
                 String dataStr = (context.split(SPLIT))[2];
-                result.put("serverId", serverId);
+                result.put(CommonConst.CLIENT_ID, serverId);
                 if (dataStr.contains(FILER)) {
                     result = null;
                 } else {

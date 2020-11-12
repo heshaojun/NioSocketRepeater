@@ -16,9 +16,9 @@ import java.util.concurrent.CompletableFuture;
  */
 @Log4j2
 public class ServerMsgHandlerStarter {
-    ServerMsgHandler handler = new ServerMsgHandler();
+    private static ServerMsgHandler handler = new ServerMsgHandler();
 
-    public void startup() {
+    public static void startup() {
         log.info("启动服务器消息处理器启动线程");
         new Thread(() -> {
             while (true) {
@@ -37,7 +37,7 @@ public class ServerMsgHandlerStarter {
         }).start();
     }
 
-    private void handleData(byte[] data) {
+    private static void handleData(byte[] data) {
         Hashtable<String, String> dataMap = MsgPackageUtils.unpackData(data);
         log.debug("读取到来自服务器的消息：" + dataMap.toString());
         if (dataMap == null) {

@@ -2,7 +2,6 @@ package org.heath.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.heath.common.CommonConst;
-import org.heath.common.CommonProperties;
 import org.heath.common.CommonStatus;
 import org.heath.utils.MsgPackageUtils;
 
@@ -15,13 +14,13 @@ import java.util.*;
  */
 @Log4j2
 public class MsgClientHeartbeatStarter {
-    public void startup() {
+    public static void startup() {
         log.info("开始启动消息客户端心跳线程，定时生成心跳数据");
         Hashtable<String, String> msg = new Hashtable<>();
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!CommonStatus.isIsMsgClientWorking) {
+                if (!CommonStatus.isMsgClientWorking) {
                     CommonConst.CLIENT_MSG_QUEUE.clear();
                     log.info("消息客户端未工作，暂时不生成心跳数据包");
                     CommonConst.CLIENT_MSG_QUEUE.clear();

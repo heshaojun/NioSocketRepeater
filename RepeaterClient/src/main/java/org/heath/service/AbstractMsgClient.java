@@ -12,9 +12,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -46,7 +43,7 @@ public abstract class AbstractMsgClient implements IMsgClient {
                 log.info("将消息客户端通道到读取事件注册到选择器上");
                 channel.register(selector, SelectionKey.OP_READ);
                 startupClientMsgWriter(channel);
-                CommonStatus.isIsMsgClientWorking = true;
+                CommonStatus.isMsgClientWorking = true;
                 CommonStatus.msgClientStatus = CommonStatus.MsgClientStatus.HEALTH;
                 log.info("开始轮训选择器");
                 while (true) {
@@ -79,7 +76,7 @@ public abstract class AbstractMsgClient implements IMsgClient {
             log.error("消息客户端运行异常", e);
         } finally {
             CommonStatus.isMsgClientAlive = false;
-            CommonStatus.isIsMsgClientWorking = false;
+            CommonStatus.isMsgClientWorking = false;
             try {
                 if (channel != null) channel.close();
             } catch (Exception e) {
