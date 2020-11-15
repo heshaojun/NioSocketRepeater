@@ -1,7 +1,9 @@
 package org.heath.utils;
 
 import org.heath.common.CommonProperties;
+import org.heath.common.CommonStatus;
 
+import java.nio.channels.SocketChannel;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -53,7 +55,7 @@ public class MsgPackageUtils {
         return result;
     }
 
-    public static byte[] packData(Map<String, String> data, String msgServerId) {
+    public static byte[] packData(Map<String, String> data, CommonProperties.ClientInfoMap clientInfoMap) {
         byte[] result = null;
         try {
             StringBuilder builder = new StringBuilder();
@@ -65,9 +67,9 @@ public class MsgPackageUtils {
             }
             String dataStr = builder.toString();
             byte[] dataBytes = dataStr.getBytes("UTF-8");
-            byte[] encrypted = AESUtils.encrypt(dataBytes, CommonProperties.SERVER_AES_KEY_MAP.get(msgServerId));
+            byte[] encrypted = AESUtils.encrypt(dataBytes, clientInfoMap.getServerKey());
             dataStr = Base64Utils.encodeToString(encrypted);
-            dataStr = HEADER + SPLIT + msgServerId + SPLIT + dataStr + SPLIT;
+            dataStr = HEADER + SPLIT + clientInfoMap.getServerId() + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
             if (len > CommonProperties.PACKAGE_SIZE) return null;
             if (len < CommonProperties.PACKAGE_SIZE) {
@@ -111,7 +113,7 @@ public class MsgPackageUtils {
         return result;
     }
 
-    public static Hashtable<String, String> unpackData(byte[] data) {
+    public static Hashtable<String, String> unpackData(byte[] data, CommonProperties.ClientInfoMap clientInfoMap) {
 
         Hashtable<String, String> result = new Hashtable<>();
         try {
@@ -124,7 +126,7 @@ public class MsgPackageUtils {
                     result = null;
                 } else {
                     byte[] dataBytes = Base64Utils.decode(dataStr);
-                    dataBytes = AESUtils.decrypt(dataBytes, CommonProperties.CLIENT_AES_KEY_MAP.get(serverId));
+                    dataBytes = AESUtils.decrypt(dataBytes, clientInfoMap.getClientKey());
                     String str = new String(dataBytes, "UTF-8");
                     for (String s : str.split(SPLIT)) {
                         if (s.contains(K_V_SPLIT)) {
@@ -132,6 +134,9 @@ public class MsgPackageUtils {
                             result.put(tem[0], tem[1]);
                         }
                     }
+                }
+                if (!(clientInfoMap.getClientId()).equals(result.get(CommonConst.CLIENT_ID))) {
+                    result = null;
                 }
             } else {
                 result = null;

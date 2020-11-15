@@ -13,12 +13,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @Author shaojun he
@@ -69,6 +69,53 @@ public class MsgServer extends AbstractServer {
 
     @Override
     protected void handleRead(SelectionKey key) {
+        SocketChannel channel = null;
+        try {
+            channel = (SocketChannel) key.channel();
+            CommonProperties.ClientInfoMap clientMapInfo = CommonProperties.MSG_CLIENT_INFO_MAP.get(channel);
+            ByteBuffer buffer = clientMapInfo.getBuffer();
+            if (channel.read(buffer) == -1) throw new IOException("读取到结尾");
+            if (buffer.position() == buffer.limit()) {
+                buffer.flip();
+                byte[] data = new byte[buffer.limit()];
+                buffer.get(data);
+                buffer.clear();
+                CompletableFuture.runAsync(() -> {
+                    handleMsg(data, clientMapInfo);
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (Exception e1) {
+                }
+                try {
+                    CommonProperties.MSG_CLIENT_INFO_MAP.remove(channel);
+                } catch (Exception e1) {
+                }
+            }
+        }
+    }
+
+    private void handleMsg(byte[] data, CommonProperties.ClientInfoMap clientMapInfo) {
+        try {
+            Hashtable<String, String> map = MsgPackageUtils.unpackData(data, clientMapInfo);
+            if (map == null) throw new IOException("数据包异常");
+            log.info("读取到的客户端消息为：" + map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            SocketChannel channel = clientMapInfo.getChannel();
+            try {
+                channel.close();
+            } catch (Exception e1) {
+            }
+            try {
+                CommonProperties.MSG_CLIENT_INFO_MAP.remove(channel);
+            } catch (Exception e1) {
+            }
+        }
 
     }
 
@@ -79,11 +126,11 @@ public class MsgServer extends AbstractServer {
             log.info("向消息客户端写入认证数据");
             String token = UUID.randomUUID().toString().replaceAll("-", "");
             String serverId = UUID.randomUUID().toString().replaceAll("-", "");
-            byte[] serverAESKeyBytes = AESUtils.generateKey();
-            String serverAESKey = Base64Utils.encodeToString(serverAESKeyBytes);
+            byte[] serverAESKey = AESUtils.generateKey();
+            String serverKey = Base64Utils.encodeToString(serverAESKey);
             Hashtable<String, String> authDataMap = new Hashtable<>();
             authDataMap.put(CommonConst.TOKEN, token);
-            authDataMap.put(CommonConst.KEY, serverAESKey);
+            authDataMap.put(CommonConst.KEY, serverKey);
             byte[] dataBytes = MsgPackageUtils.packAuthData(authDataMap, serverId);
             buffer.put(dataBytes);
             buffer.flip();
@@ -95,6 +142,7 @@ public class MsgServer extends AbstractServer {
             }
             if (buffer.position() != buffer.limit()) throw new IOException("写入到数据不完整");
             //读取token
+            log.info("开始读取消息客户端到验证token");
             for (int i = 0; i < 10000; i++) {
                 if (channel.read(buffer) == -1) throw new IOException("read end");
                 if (buffer.position() == buffer.limit()) break;
@@ -109,24 +157,16 @@ public class MsgServer extends AbstractServer {
             String readToken = dataMap.get(CommonConst.TOKEN);
             String clientId = dataMap.get(CommonConst.CLIENT_ID);
             String clientKey = dataMap.get(CommonConst.KEY);
-            log.debug("解析读取到消息服务器到数据 token:" + token + "  serverId:" + serverId + "  serverKey:" + serverKey);
-            if (token == null || "".equals(token) || serverId == null || "".equals(serverId) || serverKey == null || "".equals(serverKey))
+            byte[] clientAESKey = Base64Utils.decode(clientKey);
+            log.info("解析读取到消息服务器到数据 readToken:" + readToken + "  clientId:" + clientId + "  clientKey:" + clientKey);
+            if (readToken == null || "".equals(readToken) || clientId == null || "".equals(clientId) || clientKey == null || "".equals(clientKey)) {
+                log.info("认证数据不合法");
                 return false;
-            CommonProperties.msgServerId = serverId;
-            CommonProperties.serverAESKey = Base64Utils.decode(serverKey);
-            //写入token
-            String clientId = UUID.randomUUID().toString().replace("-", "");
-            CommonProperties.msgClientId = clientId;
-            dataMap.remove(CommonConst.SERVER_ID);
-            byte[] clientAESKey = AESUtils.generateKey();
-            CommonProperties.clientAESKey = clientAESKey;
-            String clientKey = Base64Utils.encodeToString(clientAESKey);
-            dataMap.put(CommonConst.KEY, clientKey);
-            data = MsgPackageUtils.packAuthData(dataMap);
-            log.debug("生成消息客户端到认证消息： clientId:" + clientId + "  clientKey:" + clientKey);
-            if (data == null) return false;
-            buffer.clear();
-
+            }
+            if (!readToken.equals(token)) {
+                log.info("认证token不相同");
+            }
+            CommonProperties.MSG_CLIENT_INFO_MAP.put(channel, new CommonProperties.ClientInfoMap(serverId, clientId, serverAESKey, clientAESKey, channel));
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
