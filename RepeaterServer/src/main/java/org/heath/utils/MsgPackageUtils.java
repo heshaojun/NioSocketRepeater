@@ -44,9 +44,9 @@ public class MsgPackageUtils {
             dataStr = Base64Utils.encodeToString(encrypted);
             dataStr = HEADER + SPLIT + msgServerId + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
-            if (len > CommonProperties.PACKAGE_SIZE) return null;
-            if (len < CommonProperties.PACKAGE_SIZE) {
-                dataStr += FILLER.substring(0, CommonProperties.PACKAGE_SIZE - len);
+            if (len > CommonProperties.AUTH_PACKAGE_SIZE) return null;
+            if (len < CommonProperties.AUTH_PACKAGE_SIZE) {
+                dataStr += FILLER.substring(0, CommonProperties.AUTH_PACKAGE_SIZE - len);
                 result = dataStr.getBytes();
             }
         } catch (Exception e) {
@@ -87,9 +87,9 @@ public class MsgPackageUtils {
         try {
             String context = new String(data);
             if (context.startsWith(HEADER)) {
-                String serverId = (context.split(SPLIT))[1];
+                String clientId = (context.split(SPLIT))[1];
                 String dataStr = (context.split(SPLIT))[2];
-                result.put(CommonConst.CLIENT_ID, serverId);
+                result.put(CommonConst.CLIENT_ID, clientId);
                 if (dataStr.contains(FILER)) {
                     result = null;
                 } else {

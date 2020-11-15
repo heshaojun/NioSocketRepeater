@@ -1,5 +1,7 @@
 package org.heath;
 
+import org.heath.service.MsgClientHeartbeatStarter;
+import org.heath.service.MsgClientStarter;
 import org.heath.utils.AESUtils;
 import org.heath.utils.PBEUtils;
 import org.heath.utils.RSAUtils;
@@ -14,6 +16,13 @@ import java.util.Map;
  */
 public class ClientStarter {
     public static void main(String[] args) {
-
+        MsgClientStarter.startup();
+        MsgClientHeartbeatStarter.startup();
+        while (true) {
+            try {
+                Thread.sleep(100000);
+            } catch (Exception e) {
+            }
+        }
     }
 }

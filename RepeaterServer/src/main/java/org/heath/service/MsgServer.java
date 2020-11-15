@@ -43,6 +43,7 @@ public class MsgServer extends AbstractServer {
 
     @Override
     protected ServerSocketChannel createServer() throws IOException {
+        log.info("启动消息服务器，绑定端口为：" + CommonProperties.MSG_PORT);
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.bind(new InetSocketAddress(CommonProperties.MSG_PORT), 10);
         serverSocketChannel.configureBlocking(false);

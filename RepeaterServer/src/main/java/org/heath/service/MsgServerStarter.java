@@ -15,17 +15,19 @@ import java.util.TimerTask;
 public class MsgServerStarter {
     public static void startup() {
         log.info("启动消息服务端启动线程");
-        new Timer().schedule(new TimerTask() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!CommonStatus.isMsgServerWorking) {
-                    CommonStatus.isMsgServerAlive = false;
-                    return;
-                }
                 if (!CommonStatus.isMsgServerAlive) {
                     log.info("消息服务端未启动，开始启动消息服务端");
                     new Thread(new MsgServer()).start();
+                } else if (!CommonStatus.isMsgServerWorking) {
+                    log.info("消息服务器未工作，开始关闭消息服务器");
+                    CommonStatus.isMsgServerAlive = false;
+                    return;
                 }
+
             }
         }, 100, 2 * 1000);
     }
