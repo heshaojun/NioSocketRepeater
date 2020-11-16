@@ -2,7 +2,6 @@ package org.heath.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.heath.common.CommonConst;
-import org.heath.common.CommonProperties;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -29,7 +28,7 @@ public class MsgPackUtils {
         FILLER = builder.toString();
     }
 
-    public static byte[] pack(Map<String, String> map, String id) {
+    public static byte[] pack(Map<String, String> map, String id, int packSize) {
         byte[] result = null;
         try {
             StringBuilder builder = new StringBuilder();
@@ -42,11 +41,11 @@ public class MsgPackUtils {
             String dataStr = builder.toString();
             byte[] dataBytes = dataStr.getBytes("UTF-8");
             dataStr = Base64.encodeBase64String(dataBytes);
-            dataStr = HEADER + SPLIT + CommonProperties.clientId + SPLIT + dataStr + SPLIT;
+            dataStr = HEADER + SPLIT + id + SPLIT + dataStr + SPLIT;
             int len = dataStr.getBytes().length;
-            if (len > CommonProperties.MSG_PACK_SIZE) return null;
-            if (len < CommonProperties.MSG_PACK_SIZE) {
-                dataStr += FILLER.substring(0, CommonProperties.MSG_PACK_SIZE - len);
+            if (len > packSize) return null;
+            if (len < packSize) {
+                dataStr += FILLER.substring(0, packSize - len);
                 result = dataStr.getBytes("UTF-8");
             }
         } catch (Exception e) {

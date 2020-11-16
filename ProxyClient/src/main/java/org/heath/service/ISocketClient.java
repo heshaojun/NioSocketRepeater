@@ -7,8 +7,9 @@ import java.nio.channels.SocketChannel;
  * @author shaojun he
  * @mail keepword_heshaojun@hotmail.com
  * @data 2020/11/15
+ * 通用nio socket客户端接口
  */
-public interface IClient {
+public interface ISocketClient {
     default SocketChannel connect(String ip, int port) {
         SocketChannel channel = null;
         try {

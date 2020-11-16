@@ -17,72 +17,28 @@ import java.util.Iterator;
  * @Description 消息客户端
  */
 @Log4j2
-public abstract class AbstractMsgClient implements IMsgClient {
+public abstract class AbstractMsgSocketClient extends AbstractLifeManager implements ISocketClient, IMsgListener {
 
-
-    private IClientAuthHandler authHandler;
-    private IClientMsgHandler clientMsgHandler;
-
-    private volatile boolean work = false;
-    private volatile boolean alive = false;
     private volatile SocketChannel channel;
 
-    public AbstractMsgClient(IClientAuthHandler authHandler, IClientMsgHandler clientMsgHandler) {
-        this.authHandler = authHandler;
-        this.clientMsgHandler = clientMsgHandler;
-    }
 
     @Override
-    public boolean isWorking() {
-        return work;
-    }
-
-    @Override
-    public boolean isAlive() {
-        return alive;
-    }
-
-    @Override
-    public void startupWork() {
-        work = true;
-    }
-
-    @Override
-    public void startupLife() {
-        alive = true;
-    }
-
-    @Override
-    public void stopWork() {
-        work = false;
-    }
-
-    @Override
-    public void kill() {
-        try {
-            if (channel != null) channel.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        alive = false;
-    }
-
-    @Override
-    public void startup() {
+    public void boot() {
         log.info("开始启动消息客户端，连接服务器信息：" + CommonProperties.SERVER_IP + "：" + CommonProperties.MSG_PORT);
         this.channel = connect(CommonProperties.SERVER_IP, CommonProperties.MSG_PORT);
         if (channel == null) return;
-        startupLife();
+        startup();
         Selector selector = null;
         ByteBuffer buffer = ByteBuffer.allocateDirect(CommonProperties.MSG_PACK_SIZE);
+        workup();
         try {
             selector = Selector.open();
-            if (!authHandler.auth(channel)) throw new Exception("认证失败");
+            if (!auth(channel)) throw new Exception("认证失败");
             log.info("消息客户端通过消息服务器到认证");
             channel.register(selector, SelectionKey.OP_READ);
-            startupWriter();
             log.info("消息客户端开始工作");
             while (true) {
+                if (!isAlive() || !isWorking()) break;
                 if (selector.select(500) == 0) continue;
                 Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
                 while (keys.hasNext()) {
@@ -104,8 +60,8 @@ public abstract class AbstractMsgClient implements IMsgClient {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            kill();
-            stopWork();
+            shutdown();
+            hangup();
             try {
                 channel.close();
             } catch (Exception e) {
@@ -122,17 +78,17 @@ public abstract class AbstractMsgClient implements IMsgClient {
         log.info("消息客户端停止工作");
     }
 
-    protected void startupWriter() {
-        log.info("启动消息客户端，消息写入线程");
-        new Thread(() -> {
-            while (true) {
-                if (!isAlive()) break;
-                clientMsgHandler.handle(channel);
-            }
-        }).start();
-        log.info("消息写入线程停止");
-    }
 
     protected abstract void handleMsg(byte[] data);
 
+    protected abstract boolean auth(SocketChannel channel);
+
+    public SocketChannel getChannel() {
+        return channel;
+    }
+
+    @Override
+    public void update() {
+        hangup();
+    }
 }
