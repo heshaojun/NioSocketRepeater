@@ -5,5 +5,5 @@ package org.heath.service;
  * @date 2020/11/16
  * @description TODO
  */
-public interface IServerEvent {
+public interface ISocketServer extends ILifeManager {
 }
