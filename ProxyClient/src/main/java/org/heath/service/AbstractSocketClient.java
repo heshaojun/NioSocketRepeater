@@ -17,7 +17,7 @@ import java.util.Iterator;
  * @Description 消息客户端
  */
 @Log4j2
-public abstract class AbstractMsgSocketClient extends AbstractLifeManager implements ISocketClient, IMsgListener {
+public abstract class AbstractSocketClient extends AbstractLifeManager implements ISocketClient, IListener {
 
     private volatile SocketChannel channel;
 

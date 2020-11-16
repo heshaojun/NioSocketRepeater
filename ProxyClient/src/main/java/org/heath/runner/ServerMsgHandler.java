@@ -3,7 +3,7 @@ package org.heath.runner;
 import lombok.extern.log4j.Log4j2;
 import org.heath.common.CommonProperties;
 import org.heath.service.AbstractLifeManager;
-import org.heath.service.IServerMsgProcessor;
+import org.heath.service.IServerProcessor;
 import sun.nio.ch.DirectBuffer;
 
 import java.nio.ByteBuffer;
@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
 @Log4j2
 public class ServerMsgHandler extends AbstractLifeManager {
     private ArrayBlockingQueue<byte[]> serverMsgQueue;
-    private IServerMsgProcessor serverMsgProcessor;
+    private IServerProcessor serverMsgProcessor;
 
-    public ServerMsgHandler(ArrayBlockingQueue<byte[]> serverMsgQueue, IServerMsgProcessor serverMsgProcessor) {
+    public ServerMsgHandler(ArrayBlockingQueue<byte[]> serverMsgQueue, IServerProcessor serverMsgProcessor) {
         this.serverMsgQueue = serverMsgQueue;
         this.serverMsgProcessor = serverMsgProcessor;
     }

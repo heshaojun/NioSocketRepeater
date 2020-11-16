@@ -1,7 +1,7 @@
 package org.heath.service;
 
 import org.heath.runner.ClientMsgHandler;
-import org.heath.runner.MsgSocketClient;
+import org.heath.runner.SocketClient;
 import org.heath.runner.ServerMsgHandler;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -24,9 +24,9 @@ public class DefaultClientBuilder {
     public ClientStarter build() {
         ArrayBlockingQueue<byte[]> clientMsgQueue = new ArrayBlockingQueue<>(20);
         ArrayBlockingQueue<byte[]> serverMsgQueue = new ArrayBlockingQueue<>(20);
-        MsgSocketClient msgSocketClient = new MsgSocketClient(serverMsgQueue);
+        SocketClient msgSocketClient = new SocketClient(serverMsgQueue);
         ClientMsgHandler clientMsgHandler = new ClientMsgHandler(clientMsgQueue, msgSocketClient);
-        IServerMsgProcessor serverMsgProcessor = new ServerMsgProcessor();
+        IServerProcessor serverMsgProcessor = new ServerProcessor();
         ServerMsgHandler serverMsgHandler = new ServerMsgHandler(serverMsgQueue, serverMsgProcessor);
         msgSocketClient.listen(serverMsgProcessor);
         return new ClientStarter(clientMsgHandler, serverMsgHandler, msgSocketClient);

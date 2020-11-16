@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 import org.heath.service.AbstractLifeManager;
-import org.heath.service.AbstractMsgSocketClient;
+import org.heath.service.AbstractSocketClient;
 import org.heath.utils.MsgPackUtils;
 import sun.nio.ch.DirectBuffer;
 
@@ -25,12 +25,12 @@ import java.util.concurrent.TimeUnit;
 @Log4j2
 public class ClientMsgHandler extends AbstractLifeManager {
     private ArrayBlockingQueue<byte[]> clientMsgQueue;
-    private AbstractMsgSocketClient msgSocketClient;
+    private AbstractSocketClient msgSocketClient;
     private Timer heartbeatTimer;
 
     private Hashtable<String, String> heartbeatDataMap = new Hashtable<>();
 
-    public ClientMsgHandler(ArrayBlockingQueue<byte[]> clientMsgQueue, AbstractMsgSocketClient msgSocketClient) {
+    public ClientMsgHandler(ArrayBlockingQueue<byte[]> clientMsgQueue, AbstractSocketClient msgSocketClient) {
         this.clientMsgQueue = clientMsgQueue;
         this.msgSocketClient = msgSocketClient;
     }

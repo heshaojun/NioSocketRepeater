@@ -5,8 +5,5 @@ package org.heath.service;
  * @date 2020/11/16
  * @description TODO
  */
-public interface IMsgEvent {
-    void attach(IMsgListener listener);
-
-    void notifyAllLis();
+public interface IServerEvent {
 }

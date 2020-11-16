@@ -3,7 +3,6 @@ package org.heath.service;
 import org.heath.common.CommonConst;
 import org.heath.utils.MsgPackUtils;
 
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -11,7 +10,7 @@ import java.util.Map;
  * @date 2020/11/16
  * @description TODO
  */
-public class ServerMsgProcessor extends AbstractServerMsgProcessor {
+public class ServerProcessor extends AbstractServerProcessor {
     @Override
     public void handle(byte[] data) {
         Map<String, String> dataMap = MsgPackUtils.unpack(data);

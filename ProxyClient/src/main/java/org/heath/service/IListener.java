@@ -5,9 +5,9 @@ package org.heath.service;
  * @date 2020/11/16
  * @description TODO
  */
-public interface IMsgListener {
-    default void listen(IMsgEvent... events) {
-        for (IMsgEvent event : events) {
+public interface IListener {
+    default void listen(IEvent... events) {
+        for (IEvent event : events) {
             event.attach(this);
         }
     }

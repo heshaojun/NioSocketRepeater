@@ -1,6 +1,6 @@
 package org.heath.runner;
 
-import org.heath.service.AbstractMsgSocketClient;
+import org.heath.service.AbstractSocketClient;
 
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -11,10 +11,10 @@ import java.util.concurrent.ArrayBlockingQueue;
  * @Date 2020/11/15
  * @Description 处理来自消息服务器的消息
  */
-public class MsgSocketClient extends AbstractMsgSocketClient {
+public class SocketClient extends AbstractSocketClient {
     private ArrayBlockingQueue<byte[]> serverMsgQueue;
 
-    public MsgSocketClient(ArrayBlockingQueue<byte[]> serverMsgQueue) {
+    public SocketClient(ArrayBlockingQueue<byte[]> serverMsgQueue) {
         this.serverMsgQueue = serverMsgQueue;
     }
 

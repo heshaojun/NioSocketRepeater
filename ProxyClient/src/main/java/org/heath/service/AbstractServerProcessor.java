@@ -10,8 +10,8 @@ import java.util.ArrayList;
  * @description TODO
  */
 @Log4j2
-public abstract class AbstractServerMsgProcessor implements IServerMsgProcessor {
-    private ArrayList<IMsgListener> listeners = new ArrayList<>();
+public abstract class AbstractServerProcessor implements IServerProcessor {
+    private ArrayList<IListener> listeners = new ArrayList<>();
 
     //处理对接对接消息
     protected void handleDock(String dockId) {
@@ -24,13 +24,13 @@ public abstract class AbstractServerMsgProcessor implements IServerMsgProcessor 
     }
 
     @Override
-    public void attach(IMsgListener listener) {
+    public void attach(IListener listener) {
         listeners.add(listener);
     }
 
     @Override
     public void notifyAllLis() {
-        for (IMsgListener listener : listeners) {
+        for (IListener listener : listeners) {
             listener.update();
         }
     }
