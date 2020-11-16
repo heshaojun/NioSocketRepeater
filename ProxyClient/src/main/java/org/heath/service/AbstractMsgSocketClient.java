@@ -23,7 +23,7 @@ public abstract class AbstractMsgSocketClient extends AbstractLifeManager implem
 
 
     @Override
-    public void boot() {
+    public void run() {
         log.info("开始启动消息客户端，连接服务器信息：" + CommonProperties.SERVER_IP + "：" + CommonProperties.MSG_PORT);
         this.channel = connect(CommonProperties.SERVER_IP, CommonProperties.MSG_PORT);
         if (channel == null) return;

@@ -21,20 +21,21 @@ public interface ILifeManager extends Runnable {
 
     void startup();//启动
 
-    void boot();//线程启动
-
     long getPeriod();//获取线程自检周期
 
-    @Override
-    default void run() {
+    default void boot() {
         //通过定时器定时判断，实现自我管理
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!isAlive()) {
-                    boot();
+                    try {
+                        new Thread(this).start();
+                    } catch (Exception e) {
+                    }
                 }
             }
         }, 100, getPeriod());
     }
+
 }

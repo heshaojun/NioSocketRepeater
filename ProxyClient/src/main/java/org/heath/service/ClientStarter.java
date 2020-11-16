@@ -6,19 +6,19 @@ package org.heath.service;
  * @description 客户端启动入口
  */
 public class ClientStarter {
-    private Runnable clientMsgHandler;
-    private Runnable serverMsgHandler;
-    private Runnable msgSocketClient;
+    private ILifeManager clientMsgHandler;
+    private ILifeManager serverMsgHandler;
+    private ILifeManager msgSocketClient;
 
-    public ClientStarter(Runnable clientMsgHandler, Runnable serverMsgHandler, Runnable msgSocketClient) {
+    public ClientStarter(ILifeManager clientMsgHandler, ILifeManager serverMsgHandler, ILifeManager msgSocketClient) {
         this.clientMsgHandler = clientMsgHandler;
         this.serverMsgHandler = serverMsgHandler;
         this.msgSocketClient = msgSocketClient;
     }
 
     public void startup() {
-        new Thread(clientMsgHandler).start();
-        new Thread(serverMsgHandler).start();
-        new Thread(msgSocketClient).start();
+        clientMsgHandler.boot();
+        serverMsgHandler.boot();
+        msgSocketClient.boot();
     }
 }

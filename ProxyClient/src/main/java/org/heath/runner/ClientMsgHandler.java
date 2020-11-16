@@ -36,7 +36,7 @@ public class ClientMsgHandler extends AbstractLifeManager {
     }
 
     @Override
-    public void boot() {
+    public void run() {
         log.info("启动客户端消息处理线程");
         startup();
         ByteBuffer buffer = ByteBuffer.allocateDirect(CommonProperties.MSG_PACK_SIZE);

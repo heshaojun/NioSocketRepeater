@@ -26,7 +26,9 @@ public class DefaultClientBuilder {
         ArrayBlockingQueue<byte[]> serverMsgQueue = new ArrayBlockingQueue<>(20);
         MsgSocketClient msgSocketClient = new MsgSocketClient(serverMsgQueue);
         ClientMsgHandler clientMsgHandler = new ClientMsgHandler(clientMsgQueue, msgSocketClient);
-        ServerMsgHandler serverMsgHandler = new ServerMsgHandler(serverMsgQueue);
+        IServerMsgProcessor serverMsgProcessor = new ServerMsgProcessor();
+        ServerMsgHandler serverMsgHandler = new ServerMsgHandler(serverMsgQueue, serverMsgProcessor);
+        msgSocketClient.listen(serverMsgProcessor);
         return new ClientStarter(clientMsgHandler, serverMsgHandler, msgSocketClient);
     }
 }
