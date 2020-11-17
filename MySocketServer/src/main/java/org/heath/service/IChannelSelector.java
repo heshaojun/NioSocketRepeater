@@ -7,6 +7,6 @@ import java.nio.channels.SocketChannel;
  * @date 2020/11/17
  * @description TODO
  */
-public interface IChannelRegister {
+public interface IChannelSelector {
     void registry(SocketChannel channel, int event);
 }

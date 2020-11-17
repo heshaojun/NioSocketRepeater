@@ -1,16 +1,13 @@
 package org.heath.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.heath.utils.MsgPackUtils;
 
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author heshaojun
@@ -18,24 +15,30 @@ import java.util.Map;
  * @description TODO
  */
 @Log4j2
-public abstract class AbstractMsgServer implements Runnable {
-    private IChannelRegister channelRegister;
+public abstract class AbstractMsgServer extends AbstractAutoManager {
+    private IChannelSelector channelRegister;
+    private int port;
+    private int logback;
 
-    public AbstractMsgServer(IChannelRegister channelRegister) {
+    public AbstractMsgServer(IChannelSelector channelRegister) {
         this.channelRegister = channelRegister;
+        this.port = Integer.valueOf(System.getProperty("msg.server.port", "8888"));
+        this.logback = Integer.valueOf(System.getProperty("msg.server.logback", "10"));
     }
 
     @Override
     public void run() {
         log.info("启动消息服务器");
+        startLife();
         ServerSocketChannel serverSocketChannel = null;
         Selector selector = null;
         try {
             serverSocketChannel = ServerSocketChannel.open();
             selector = Selector.open();
-            serverSocketChannel.bind(new InetSocketAddress(8888), 10);
+            serverSocketChannel.bind(new InetSocketAddress(port), logback);
             serverSocketChannel.configureBlocking(false);
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            startWork();
             while (true) {
                 if (selector.select(500) == 0) continue;
                 Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
@@ -49,6 +52,17 @@ public abstract class AbstractMsgServer implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (selector != null) selector.close();
+            } catch (Exception e) {
+            }
+            try {
+                if (serverSocketChannel != null) serverSocketChannel.close();
+            } catch (Exception e) {
+            }
+            startWork();
+            startLife();
         }
     }
 
@@ -58,11 +72,17 @@ public abstract class AbstractMsgServer implements Runnable {
             SocketChannel channel = serverSocketChannel.accept();
             log.info("消息客户端接收到来自：" + channel.getRemoteAddress() + "的连接");
             channel.configureBlocking(false);
-            channelRegister.registry(channel, SelectionKey.OP_READ);
+            if (auth(channel)) {
+                channelRegister.registry(channel, SelectionKey.OP_READ);
+            } else {
+                channel.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    protected abstract boolean auth(SocketChannel channel);
 
 
 }

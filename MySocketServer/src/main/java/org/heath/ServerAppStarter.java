@@ -1,7 +1,7 @@
 package org.heath;
 
-import org.heath.runner.MsgServerRunner;
-import org.heath.service.MSgChannelRegister;
+import org.heath.runner.DefaultMsgChannelSelector;
+import org.heath.runner.DefaultMsgServer;
 import org.heath.service.MsgReadHandler;
 
 /**
@@ -11,10 +11,13 @@ import org.heath.service.MsgReadHandler;
  */
 public class ServerAppStarter {
     public static void main(String[] args) {
+
         MsgReadHandler readHandler = new MsgReadHandler();
-        MSgChannelRegister mSgChannelRegister = new MSgChannelRegister(readHandler);
-        new MsgServerRunner(mSgChannelRegister).boot();
-        new Thread(mSgChannelRegister).start();
+        DefaultMsgChannelSelector msgChannelSelector = new DefaultMsgChannelSelector(readHandler);
+        DefaultMsgServer msgServer = new DefaultMsgServer(msgChannelSelector);
+
+        msgChannelSelector.boot();
+        msgServer.boot();
         while (true) {
             try {
                 Thread.sleep(10000);
