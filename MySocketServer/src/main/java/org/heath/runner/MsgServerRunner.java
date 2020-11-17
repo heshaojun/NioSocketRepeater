@@ -3,6 +3,7 @@ package org.heath.runner;
 import lombok.extern.log4j.Log4j2;
 import org.heath.service.AbstractMsgServer;
 import org.heath.service.IChannelRegister;
+import org.heath.service.IRunner;
 
 /**
  * @author heshaojun
