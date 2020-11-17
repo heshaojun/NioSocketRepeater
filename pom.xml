@@ -9,6 +9,8 @@
         <module>RepeaterServer</module>
         <module>ProxyClient</module>
         <module>ProxyServer</module>
+        <module>MySocketServer</module>
+        <module>MySocketClient</module>
     </modules>
     <groupId>org.heath</groupId>
     <artifactId>NioSocketRepeater</artifactId>

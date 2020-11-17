@@ -1,0 +1,10 @@
+package org.heath.runner;
+
+/**
+ * @author heshaojun
+ * @date 2020/11/17
+ * @description TODO
+ */
+public interface IRunner {
+    void boot();
+}

@@ -4,9 +4,9 @@ import java.nio.channels.SelectionKey;
 
 /**
  * @author heshaojun
- * @date 2020/11/16
+ * @date 2020/11/17
  * @description TODO
  */
-public interface ISocketServer {
-    void handleAccept(SelectionKey key);
+public interface IEventHandler {
+    void handle(SelectionKey key);
 }

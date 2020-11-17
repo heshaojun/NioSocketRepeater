@@ -1,11 +1,5 @@
 package org.heath.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-import java.util.Hashtable;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -32,23 +26,4 @@ public class CommonConst {
 
     public static final ArrayBlockingQueue<byte[]> SERVER_MSG_QUEUE = new ArrayBlockingQueue<byte[]>(Integer.valueOf(System.getProperty("server.msg.queue", "100")));
     public static final ArrayBlockingQueue<byte[]> CLIENT_MSG_QUEUE = new ArrayBlockingQueue<byte[]>(Integer.valueOf(System.getProperty("client.msg.queue", "100")));
-    public static final Hashtable<SocketChannel, MsgClientInfo> MSG_CLIENT_INFO_MAP = new Hashtable<>();
-
-
-    @Data
-    public static class MsgClientInfo {
-        private SocketChannel channel;
-        private String id;
-        private byte[] key;
-        private long refreshTime;
-        private ByteBuffer buffer;
-
-        public MsgClientInfo(SocketChannel channel, String id, byte[] key, long refreshTime) {
-            this.channel = channel;
-            this.id = id;
-            this.key = key;
-            this.refreshTime = refreshTime;
-            this.buffer = ByteBuffer.allocateDirect(CommonProperties.MSG_PACK_SIZE);
-        }
-    }
 }

@@ -25,12 +25,13 @@ public interface ILifeManager extends Runnable {
 
     default void boot() {
         //通过定时器定时判断，实现自我管理
+        final ILifeManager lifeManager = this;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!isAlive()) {
                     try {
-                        new Thread(this).start();
+                        new Thread(lifeManager).start();
                     } catch (Exception e) {
                     }
                 }

@@ -56,8 +56,10 @@ public class ClientMsgHandler extends AbstractLifeManager {
                         continue;
                     }
                     if (!msgSocketClient.isWorking()) continue;
+                    log.info("消息客户端客户端消息处理器，接收到新的消息");
                     buffer.clear();
                     buffer.put(clientMsgData);
+                    buffer.flip();
                     msgSocketClient.getChannel().write(buffer);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -94,6 +96,7 @@ public class ClientMsgHandler extends AbstractLifeManager {
                 try {
                     heartbeatDataMap.put(CommonConst.TYPE, CommonConst.HEARTBEAT_TYPE);
                     heartbeatDataMap.put(CommonConst.HEARTBEAT, "" + new Date().getTime());
+                    log.info("生成新的心跳包:" + heartbeatDataMap);
                     byte[] data = MsgPackUtils.pack(heartbeatDataMap, CommonProperties.clientId, CommonProperties.MSG_PACK_SIZE);
                     clientMsgQueue.put(data);
                 } catch (Exception e) {
