@@ -12,7 +12,7 @@ import java.security.Key;
  */
 public class CommonProperties {
     public static final int PACK_SIZE = Integer.valueOf(System.getProperty("pack.size", "200"));
-    public static final int AUTH_PACK_SIZE = Integer.valueOf(System.getProperty("auth.pack.size", "1000"));
+    public static final int AUTH_PACK_SIZE = Integer.valueOf(System.getProperty("auth.pack.size", "500"));
     public static volatile String authId = "authId";
     public static volatile String token = "token";
 

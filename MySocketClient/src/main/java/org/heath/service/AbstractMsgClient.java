@@ -47,12 +47,12 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
             channel.connect(new InetSocketAddress(ip, port));
             channel.configureBlocking(false);
             if (!auth(channel)) throw new Exception("认证失败");
-            log.info("注册读取事件");
+            log.info("完成认证，注册读取事件");
             channel.register(selector, SelectionKey.OP_READ);
             startClientMsgWriter(channel);
             startWork();
             while (true) {
-                if (selector.select(500) == -1) continue;
+                if (selector.select(500) == 0) continue;
                 Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
                 while (keys.hasNext()) {
                     SelectionKey key = keys.next();
