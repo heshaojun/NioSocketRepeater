@@ -73,6 +73,7 @@ public abstract class AbstractMsgServer extends AbstractAutoManager {
             log.info("消息客户端接收到来自：" + channel.getRemoteAddress() + "的连接");
             channel.configureBlocking(false);
             if (auth(channel)) {
+                log.info("客户端认证成功，开始注册读取事件");
                 channelRegister.registry(channel, SelectionKey.OP_READ);
             } else {
                 channel.close();

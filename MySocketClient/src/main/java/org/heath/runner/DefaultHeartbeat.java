@@ -3,7 +3,6 @@ package org.heath.runner;
 import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 import org.heath.service.AbstractHeartbeat;
-import org.heath.service.IRunner;
 import org.heath.utils.MsgPackUtils;
 
 import java.util.Date;
@@ -26,7 +25,7 @@ public class DefaultHeartbeat extends AbstractHeartbeat {
     @Override
     protected byte[] createHeartbeat() {
         map.put(CommonConst.HEARTBEAT, "" + new Date().getTime());
-        byte[] data = MsgPackUtils.pack(map, CommonProperties.clientId, CommonProperties.PACK_SIZE);
+        byte[] data = MsgPackUtils.pack(map, CommonProperties.authId, CommonProperties.PACK_SIZE);
         return data;
     }
 

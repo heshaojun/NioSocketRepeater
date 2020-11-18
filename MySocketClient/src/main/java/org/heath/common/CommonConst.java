@@ -20,8 +20,7 @@ public class CommonConst {
     public static final String HEARTBEAT_TYPE = "heartbeat_type";
     public static final String HEARTBEAT = "heartbeat";
 
-    public static final String SERVER_ID = "server_id";
-    public static final String CLIENT_ID = "client_id";
+    public static final String AUTH_ID = "auth_id";
 
 
     public static final ArrayBlockingQueue<byte[]> SERVER_MSG_QUEUE = new ArrayBlockingQueue<byte[]>(Integer.valueOf(System.getProperty("server.msg.queue", "100")));

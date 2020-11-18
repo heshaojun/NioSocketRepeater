@@ -59,9 +59,9 @@ public class MsgPackUtils {
         try {
             String context = new String(data);
             if (context.startsWith(HEADER)) {
-                String serverId = (context.split(SPLIT))[1];
+                String auth_id = (context.split(SPLIT))[1];
                 String dataStr = (context.split(SPLIT))[2];
-                result.put(CommonConst.SERVER_ID, serverId);
+                result.put(CommonConst.AUTH_ID, auth_id);
                 if (dataStr.contains(FILER)) {
                     result = null;
                 } else {

@@ -7,9 +7,6 @@ package org.heath.common;
  */
 public class CommonProperties {
     public static final int PACK_SIZE = Integer.valueOf(System.getProperty("pack.size", "200"));
-
-
-    public static volatile String serverId = "serverId";
-
-    public static volatile String clientId = "clientId";
+    public static volatile String authId = "authId";
+    public static volatile String token = "token";
 }

@@ -1,6 +1,6 @@
 package org.heath.runner;
 
-import org.heath.service.AbstractMsgChannelSelector;
+import org.heath.service.AbstractChannelSelector;
 import org.heath.service.IEventHandler;
 
 /**
@@ -9,8 +9,13 @@ import org.heath.service.IEventHandler;
  * @Date 2020/11/17
  * @Description TODO
  */
-public class DefaultMsgChannelSelector extends AbstractMsgChannelSelector {
+public class DefaultMsgChannelSelector extends AbstractChannelSelector {
     public DefaultMsgChannelSelector(IEventHandler eventHandler) {
         super(eventHandler);
+    }
+
+    @Override
+    protected int getSelectorSize() {
+        return Integer.valueOf(System.getProperty("msg.register.size", "1"));
     }
 }

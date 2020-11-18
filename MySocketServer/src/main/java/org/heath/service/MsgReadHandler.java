@@ -36,9 +36,12 @@ public class MsgReadHandler implements IEventHandler {
                 log.info("接收到的消息为：" + map);
                 buffer.clear();
             }
-            channel.register(key.selector(), SelectionKey.OP_READ);
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                key.cancel();
+            } catch (Exception e1) {
+            }
         }
     }
 }

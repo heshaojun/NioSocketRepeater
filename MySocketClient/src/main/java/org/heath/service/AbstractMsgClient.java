@@ -46,8 +46,9 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
             selector = Selector.open();
             channel.connect(new InetSocketAddress(ip, port));
             channel.configureBlocking(false);
-            channel.register(selector, SelectionKey.OP_READ);
             if (!auth(channel)) throw new Exception("认证失败");
+            log.info("注册读取事件");
+            channel.register(selector, SelectionKey.OP_READ);
             startClientMsgWriter(channel);
             startWork();
             while (true) {
@@ -92,11 +93,10 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
                 while (true) {
                     byte[] data = CommonConst.CLIENT_MSG_QUEUE.poll(2, TimeUnit.SECONDS);
                     if (data == null) continue;
-                    if (!isAlive()) {
+                    if (!isAlive()||!isWorking()) {
                         CommonConst.CLIENT_MSG_QUEUE.clear();
                         continue;
                     }
-                    if (!isWorking()) continue;
                     buffer.clear();
                     buffer.put(data);
                     buffer.flip();
