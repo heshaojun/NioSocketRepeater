@@ -2,6 +2,7 @@ package org.heath.common;
 
 import lombok.Data;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.Hashtable;
@@ -40,6 +41,7 @@ public class CommonConst {
         private byte[] serverKey;
         private byte[] clientKey;
         private long refreshTime;
+        private ByteBuffer buffer;
 
         public MsgClientInfo(SocketChannel channel, String id, byte[] serverKey, byte[] clientKey) {
             this.channel = channel;
@@ -47,6 +49,7 @@ public class CommonConst {
             this.serverKey = serverKey;
             this.clientKey = clientKey;
             this.refreshTime = new Date().getTime();
+            this.buffer = ByteBuffer.allocateDirect(CommonProperties.PACK_SIZE);
         }
 
     }

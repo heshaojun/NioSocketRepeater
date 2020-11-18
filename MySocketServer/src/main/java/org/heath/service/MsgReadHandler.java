@@ -1,6 +1,7 @@
 package org.heath.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.heath.common.CommonConst;
 import org.heath.utils.MsgPackUtils;
 
 import java.nio.ByteBuffer;
@@ -15,7 +16,6 @@ import java.util.Map;
  */
 @Log4j2
 public class MsgReadHandler implements IEventHandler {
-    ByteBuffer buffer = ByteBuffer.allocateDirect(200);
 
     @Override
     public void handle(SelectionKey key) {
@@ -27,6 +27,8 @@ public class MsgReadHandler implements IEventHandler {
     private void handleRead(SelectionKey key) {
         SocketChannel channel = (SocketChannel) key.channel();
         try {
+            CommonConst.MsgClientInfo msgClientInfo = CommonConst.MSG_CLIENT_INFO_MAP.get(channel);
+            ByteBuffer buffer = msgClientInfo.getBuffer();
             channel.read(buffer);
             if (buffer.position() == buffer.limit()) {
                 byte[] data = new byte[buffer.limit()];
@@ -40,6 +42,14 @@ public class MsgReadHandler implements IEventHandler {
             e.printStackTrace();
             try {
                 key.cancel();
+            } catch (Exception e1) {
+            }
+            try {
+                CommonConst.MSG_CLIENT_INFO_MAP.remove(channel);
+            } catch (Exception e1) {
+            }
+            try {
+                channel.close();
             } catch (Exception e1) {
             }
         }

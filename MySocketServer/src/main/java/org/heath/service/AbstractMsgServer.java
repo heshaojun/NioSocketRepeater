@@ -1,6 +1,7 @@
 package org.heath.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.heath.common.CommonConst;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -74,6 +75,7 @@ public abstract class AbstractMsgServer extends AbstractAutoManager {
             channel.configureBlocking(false);
             if (auth(channel)) {
                 log.info("客户端认证成功，开始注册读取事件");
+                CommonConst.MSG_CLIENT_INFO_MAP.put(channel, new CommonConst.MsgClientInfo(channel, "", null, null));
                 channelRegister.registry(channel, SelectionKey.OP_READ);
             } else {
                 channel.close();
