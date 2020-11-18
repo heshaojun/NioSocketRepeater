@@ -93,14 +93,18 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
                 while (true) {
                     byte[] data = CommonConst.CLIENT_MSG_QUEUE.poll(2, TimeUnit.SECONDS);
                     if (data == null) continue;
-                    if (!isAlive()||!isWorking()) {
+                    if (!isAlive() || !isWorking()) {
                         CommonConst.CLIENT_MSG_QUEUE.clear();
                         continue;
                     }
                     buffer.clear();
                     buffer.put(data);
                     buffer.flip();
-                    channel.write(buffer);
+                    while (true) {
+                        channel.write(buffer);
+                        if (buffer.position() == buffer.limit()) break;
+                        Thread.sleep(10);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

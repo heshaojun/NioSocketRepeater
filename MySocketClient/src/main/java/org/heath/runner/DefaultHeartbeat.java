@@ -31,6 +31,6 @@ public class DefaultHeartbeat extends AbstractHeartbeat {
 
     @Override
     protected long getPeriod() {
-        return 2 * 1000;
+        return 5 * 1000;
     }
 }

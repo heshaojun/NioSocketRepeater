@@ -41,7 +41,10 @@ public abstract class AbstractMsgServer extends AbstractAutoManager {
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
             startWork();
             while (true) {
-                if (selector.select(500) == 0) continue;
+                if (selector.select(100) == 0) {
+                    Thread.sleep(20);
+                    continue;
+                }
                 Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
                 while (keys.hasNext()) {
                     SelectionKey key = keys.next();
