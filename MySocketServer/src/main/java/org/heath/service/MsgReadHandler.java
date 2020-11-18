@@ -35,7 +35,9 @@ public class MsgReadHandler implements IEventHandler {
                 buffer.flip();
                 buffer.get(data);
                 log.info("接收到的原始数据为：" + new String(data));
-                Map<String, String> map = MsgPackUtils.unpack(data);
+                byte[] clientKey = CommonConst.MSG_CLIENT_INFO_MAP.get(channel).getClientKey();
+                //Map<String, String> map = MsgPackUtils.unpack(data);
+                Map<String, String> map = MsgPackUtils.secretUnpack(data, clientKey);
                 log.info("接收到的消息为：" + map);
                 buffer.clear();
             }

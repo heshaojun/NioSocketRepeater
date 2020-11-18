@@ -26,7 +26,8 @@ public class DefaultHeartbeat extends AbstractHeartbeat {
     protected byte[] createHeartbeat() {
         map.put(CommonConst.HEARTBEAT, "" + new Date().getTime());
         map.put(CommonConst.TOKEN, CommonProperties.token);
-        byte[] data = MsgPackUtils.pack(map, CommonProperties.authId, CommonProperties.PACK_SIZE);
+        //byte[] data = MsgPackUtils.pack(map, CommonProperties.authId, CommonProperties.PACK_SIZE);
+        byte[] data = MsgPackUtils.secretPack(map, CommonProperties.authId, CommonProperties.PACK_SIZE, CommonProperties.clientKey);
         return data;
     }
 
