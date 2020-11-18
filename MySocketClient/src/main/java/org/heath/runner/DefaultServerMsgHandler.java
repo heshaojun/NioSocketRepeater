@@ -19,9 +19,10 @@ public class DefaultServerMsgHandler extends AbstractServerMsgHandler {
 
 
     protected void handleDock(String id) {
-
+        log.debug("接收到对接信息，开始进行对接");
     }
 
     protected void handleCMD(String cmd) {
+        log.debug("接收到指令信息，开始执行指令");
     }
 }

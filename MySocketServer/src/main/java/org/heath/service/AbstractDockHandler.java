@@ -5,7 +5,7 @@ package org.heath.service;
  * @date 2020/11/18
  * @description TODO
  */
-public abstract class AbstractServerMsgHandler implements IRunner, Runnable {
+public abstract class AbstractDockHandler implements IRunner {
     @Override
     public void boot() {
 
