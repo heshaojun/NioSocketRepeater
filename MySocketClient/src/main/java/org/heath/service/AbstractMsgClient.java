@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractMsgClient extends AbstractAutoManager {
     private String ip;
     private int port;
+    private SocketChannel channel = null;
 
     public AbstractMsgClient(String ip, int port) {
         this.ip = ip;
@@ -39,7 +40,6 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
         log.info("启动消息客户端，开始连接到服务器：" + ip + ":" + port);
         startLife();
         Selector selector = null;
-        SocketChannel channel = null;
         ByteBuffer buffer = ByteBuffer.allocateDirect(CommonProperties.PACK_SIZE);
         try {
             channel = SocketChannel.open();
@@ -49,7 +49,7 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
             if (!auth(channel)) throw new Exception("认证失败");
             log.info("完成认证，注册读取事件");
             channel.register(selector, SelectionKey.OP_READ);
-            startClientMsgWriter(channel);
+            startClientMsgWriter();
             startWork();
             while (true) {
                 if (!isWorking() || !isAlive()) break;
@@ -73,8 +73,7 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            stopLife();
-            stopWork();
+            log.info("消息客户端停止工作");
             try {
                 if (channel != null) channel.close();
             } catch (Exception e) {
@@ -83,16 +82,18 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
                 if (selector != null) selector.close();
             } catch (Exception e) {
             }
+            stopLife();
+            stopWork();
         }
     }
 
-    private void startClientMsgWriter(SocketChannel channel) {
+    private void startClientMsgWriter() {
         new Thread(() -> {
             log.info("启动消息客户端，客户端自生消息写入线程");
             ByteBuffer buffer = ByteBuffer.allocateDirect(CommonProperties.PACK_SIZE);
             try {
                 while (true) {
-                    byte[] data = CommonConst.CLIENT_MSG_QUEUE.poll(2, TimeUnit.SECONDS);
+                    byte[] data = CommonConst.CLIENT_MSG_QUEUE.poll(100, TimeUnit.MILLISECONDS);
                     if (data == null) continue;
                     if (!isAlive() || !isWorking()) {
                         CommonConst.CLIENT_MSG_QUEUE.clear();
@@ -105,6 +106,10 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
                         channel.write(buffer);
                         if (buffer.position() == buffer.limit()) break;
                         Thread.sleep(10);
+                        if (!isAlive() || !isWorking()) {
+                            CommonConst.CLIENT_MSG_QUEUE.clear();
+                            continue;
+                        }
                     }
                 }
             } catch (Exception e) {
