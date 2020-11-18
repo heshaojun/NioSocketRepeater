@@ -23,6 +23,7 @@ public abstract class AbstractHeartbeat implements IRunner {
                 try {
                     if (CommonConst.CLIENT_MSG_QUEUE.remainingCapacity() < 1) return;
                     byte[] data = createHeartbeat();
+                    if (data == null) return;
                     CommonConst.CLIENT_MSG_QUEUE.put(data);
                 } catch (Exception e) {
                     e.printStackTrace();

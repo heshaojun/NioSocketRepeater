@@ -92,6 +92,7 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
             log.info("启动消息客户端，客户端自生消息写入线程");
             ByteBuffer buffer = ByteBuffer.allocateDirect(CommonProperties.PACK_SIZE);
             try {
+                CommonConst.CLIENT_MSG_QUEUE.clear();
                 while (true) {
                     byte[] data = CommonConst.CLIENT_MSG_QUEUE.poll(100, TimeUnit.MILLISECONDS);
                     if (data == null) continue;
