@@ -16,8 +16,8 @@ public class DefaultServerMsgHandler extends AbstractServerMsgHandler {
     }
 
 
-
     protected void handleDock(String id) {
+
     }
 
     protected void handleCMD(String cmd) {

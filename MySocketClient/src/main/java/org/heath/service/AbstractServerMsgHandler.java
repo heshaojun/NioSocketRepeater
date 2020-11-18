@@ -40,13 +40,22 @@ public abstract class AbstractServerMsgHandler implements IRunner {
                     String type = map.get(CommonConst.TYPE);
                     switch (type) {
                         case CommonConst.DOCK_TYPE:
-
+                            String dockerId = map.get(CommonConst.DOCK);
+                            handleDock(dockerId);
+                            break;
+                        case CommonConst.CMD_TYPE:
+                            String cmd = map.get(CommonConst.CMD);
+                            handleCMD(cmd);
+                            break;
+                        default:
+                            throw new Exception("错误的数据包");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     msgClientAutoManager.stopWork();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
