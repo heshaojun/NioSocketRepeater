@@ -1,9 +1,11 @@
 package org.heath.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.heath.common.CommonConst;
 import org.heath.common.CommonProperties;
 import org.heath.utils.MsgPackUtils;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -11,12 +13,12 @@ import java.util.Map;
  * @date 2020/11/18
  * @description TODO
  */
+@Log4j2
 public abstract class AbstractServerMsgHandler implements IRunner {
-    protected IChannelSelector channelSelector;
+    // protected IChannelSelector channelSelector;
     protected AbstractAutoManager msgClientAutoManager;
 
-    public AbstractServerMsgHandler(IChannelSelector channelSelector, AbstractAutoManager msgClientAutoManager) {
-        this.channelSelector = channelSelector;
+    public AbstractServerMsgHandler(AbstractAutoManager msgClientAutoManager) {
         this.msgClientAutoManager = msgClientAutoManager;
     }
 
@@ -34,7 +36,9 @@ public abstract class AbstractServerMsgHandler implements IRunner {
                 if (data == null) continue;
                 if (!msgClientAutoManager.isWorking()) continue;
                 try {
-                    Map<String, String> map = MsgPackUtils.unpack(data);
+                    log.info("接受到到数据为：" + new String(data));
+                    //Map<String, String> map = MsgPackUtils.unpack(data);
+                    Map<String, String> map = MsgPackUtils.secretUnpack(data, CommonProperties.serverKey);
                     if (map == null) throw new Exception("错误的数据包");
                     if (!CommonProperties.authId.equals(map.get(CommonConst.AUTH_ID))) throw new Exception("授权id不正确");
                     String type = map.get(CommonConst.TYPE);
