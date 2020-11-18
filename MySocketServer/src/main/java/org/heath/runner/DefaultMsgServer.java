@@ -68,9 +68,10 @@ public class DefaultMsgServer extends AbstractMsgServer {
             map = MsgPackUtils.unpackAuth(data, CommonProperties.RSA_KEY);
             log.info("读取到的认证数据为：" + map);
             if (map == null) throw new Exception("非法认证数据");
-            if (token.equals(map.get(CommonConst.TOKEN)) && authId.equals(map.get(CommonConst.AUTH_ID))) {
+            if (token.equals(map.get(CommonConst.TOKEN)) && authId.equals(map.get(CommonConst.AUTH_ID)) && !"".equals(map.get(CommonConst.KEY))) {
                 result = true;
                 log.info("客户端" + channel.getRemoteAddress() + " 通过认证");
+                CommonConst.MSG_CLIENT_INFO_MAP.put(channel, new CommonConst.MsgClientInfo(channel, authId, Base64.decodeBase64(serverKey), Base64.decodeBase64(map.get(CommonConst.KEY))));
             } else {
                 result = false;
                 log.info("客户端没有通过认证");

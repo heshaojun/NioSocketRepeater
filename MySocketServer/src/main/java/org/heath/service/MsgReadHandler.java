@@ -34,6 +34,7 @@ public class MsgReadHandler implements IEventHandler {
                 byte[] data = new byte[buffer.limit()];
                 buffer.flip();
                 buffer.get(data);
+                log.info("接收到的原始数据为：" + new String(data));
                 Map<String, String> map = MsgPackUtils.unpack(data);
                 log.info("接收到的消息为：" + map);
                 buffer.clear();

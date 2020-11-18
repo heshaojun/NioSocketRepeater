@@ -52,7 +52,8 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
             startClientMsgWriter(channel);
             startWork();
             while (true) {
-                if (selector.select(500) == 0) continue;
+                if (!isWorking() || !isAlive()) break;
+                if (selector.select(100) == 0) continue;
                 Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
                 while (keys.hasNext()) {
                     SelectionKey key = keys.next();

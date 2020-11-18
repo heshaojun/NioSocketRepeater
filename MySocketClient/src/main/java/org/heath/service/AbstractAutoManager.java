@@ -12,7 +12,7 @@ public abstract class AbstractAutoManager implements IRunner, Runnable {
     private volatile boolean alive = false;
     private volatile boolean working = false;
 
-    protected boolean isAlive() {
+    public boolean isAlive() {
         return alive;
     }
 
@@ -20,7 +20,7 @@ public abstract class AbstractAutoManager implements IRunner, Runnable {
         alive = false;
     }
 
-    protected boolean isWorking() {
+    public boolean isWorking() {
         return working;
     }
 
