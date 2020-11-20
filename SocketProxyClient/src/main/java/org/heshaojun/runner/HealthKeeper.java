@@ -26,7 +26,7 @@ public class HealthKeeper implements IRunner {
             public void run() {
                 checkMappedChannel();
             }
-        }, 100, 5 * 1000);
+        }, 100, 3 * 1000);
     }
 
 
