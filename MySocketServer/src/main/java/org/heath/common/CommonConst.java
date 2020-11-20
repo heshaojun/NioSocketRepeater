@@ -48,6 +48,10 @@ public class CommonConst {
         private long refreshTime;
         private ByteBuffer buffer;
 
+        public void refresh() {
+            this.refreshTime = new Date().getTime();
+        }
+
         public MsgClientInfo(SocketChannel channel, String id, byte[] serverKey, byte[] clientKey) {
             this.channel = channel;
             this.id = id;
@@ -56,6 +60,29 @@ public class CommonConst {
             this.refreshTime = new Date().getTime();
             this.buffer = ByteBuffer.allocateDirect(CommonProperties.PACK_SIZE);
         }
+
+        public void destroy() {
+            try {
+                channel.close();
+            } catch (Exception e) {
+            }
+            try {
+                ((DirectBuffer) buffer).cleaner().clean();
+            } catch (Exception e) {
+            }
+            try {
+                MSG_CLIENT_INFO_MAP.remove(channel);
+            } catch (Exception e) {
+            }
+        }
+
+        public boolean ifTimeout(long timeout) {
+            if (new Date().getTime() - refreshTime > timeout) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     public static final Hashtable<String, CachedChannelInfo> CACHED_CHANNEL_INFO_MAP = new Hashtable<>(100);
@@ -63,11 +90,32 @@ public class CommonConst {
     @Data
     public static class CachedChannelInfo {
         private SocketChannel channel;
+        private String id;
         private long refreshTime;
 
-        public CachedChannelInfo(SocketChannel channel) {
+        public CachedChannelInfo(SocketChannel channel, String id) {
             this.channel = channel;
+            this.id = id;
             this.refreshTime = new Date().getTime();
+        }
+
+        public boolean ifTimeout(long timeout) {
+            if (new Date().getTime() - refreshTime > timeout) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public void destroy() {
+            try {
+                channel.close();
+            } catch (Exception e) {
+            }
+            try {
+                CACHED_CHANNEL_INFO_MAP.remove(id);
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -89,6 +137,16 @@ public class CommonConst {
 
         public void refresh() {
             this.refreshTime = new Date().getTime();
+        }
+
+        public boolean ifTimeout(long timeout) {
+            try {
+                if (new Date().getTime() - refreshTime > timeout && new Date().getTime() - MAPPED_CHANNEL.get(mapped).getRefreshTime() > timeout) {
+                    return true;
+                }
+            } catch (Exception e) {
+            }
+            return false;
         }
 
         public void destroy() {

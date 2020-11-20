@@ -24,6 +24,8 @@ public class ServerAppStarter {
         DefaultDockChannelSelector dockChannelSelector = new DefaultDockChannelSelector(new RepeatDataHandler());
         //对接服务器
         DefaultDockServer dockServer = new DefaultDockServer(dockChannelSelector);
+        //健康保持
+        HealthKeeper healthKeeper = new HealthKeeper();
 
         msgChannelSelector.boot();
         msgServer.boot();
@@ -31,6 +33,7 @@ public class ServerAppStarter {
         proxyServer.boot();
         dockChannelSelector.boot();
         dockServer.boot();
+        healthKeeper.boot();
         while (true) {
             try {
                 Thread.sleep(60);

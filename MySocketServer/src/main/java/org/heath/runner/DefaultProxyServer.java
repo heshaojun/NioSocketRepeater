@@ -30,7 +30,7 @@ public class DefaultProxyServer extends AbstractProxyServer {
             }
             String id = UUID.randomUUID().toString();
             log.info("有新的连接，连接id为：" + id);
-            CommonConst.CACHED_CHANNEL_INFO_MAP.put(id, new CommonConst.CachedChannelInfo(channel));
+            CommonConst.CACHED_CHANNEL_INFO_MAP.put(id, new CommonConst.CachedChannelInfo(channel, id));
             CommonConst.DOCK_MSG_QUEUE.put(id);
         } catch (Exception e) {
             e.printStackTrace();

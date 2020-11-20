@@ -56,6 +56,16 @@ public class CommonConst {
             this.refreshTime = new Date().getTime();
         }
 
+        public boolean ifTimeout(long timeout) {
+            try {
+                if (new Date().getTime() - refreshTime > timeout && new Date().getTime() - MAPPED_CHANNEL.get(mapped).getRefreshTime() > timeout) {
+                    return true;
+                }
+            } catch (Exception e) {
+            }
+            return false;
+        }
+
         public void destroy() {
             try {
                 MAPPED_CHANNEL.remove(self);

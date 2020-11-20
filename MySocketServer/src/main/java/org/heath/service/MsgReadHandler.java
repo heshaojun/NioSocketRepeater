@@ -36,7 +36,14 @@ public class MsgReadHandler implements IEventHandler {
                 buffer.get(data);
                 byte[] clientKey = CommonConst.MSG_CLIENT_INFO_MAP.get(channel).getClientKey();
                 Map<String, String> map = MsgPackUtils.secretUnpack(data, clientKey);
-                //log.info("接收到的消息为：" + map);
+                log.info("接收到的消息为：" + map);
+                switch (map.get(CommonConst.TYPE)) {
+                    case CommonConst.HEARTBEAT_TYPE:
+                        handleHeartbeat(channel);
+                        break;
+                    default:
+                        break;
+                }
                 buffer.clear();
             }
         } catch (Exception e) {
@@ -53,6 +60,13 @@ public class MsgReadHandler implements IEventHandler {
                 channel.close();
             } catch (Exception e1) {
             }
+        }
+    }
+
+    private void handleHeartbeat(SocketChannel channel) {
+        try {
+            CommonConst.MSG_CLIENT_INFO_MAP.get(channel).refresh();
+        } catch (Exception e) {
         }
     }
 }

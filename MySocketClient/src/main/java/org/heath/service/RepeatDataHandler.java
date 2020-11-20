@@ -17,7 +17,6 @@ public class RepeatDataHandler implements IEventHandler {
     @Override
     public void handle(SelectionKey key) {
         if (key.isReadable()) {
-            log.info("中继读事件就绪");
             SocketChannel channel = (SocketChannel) key.channel();
             try {
                 CommonConst.ChannelInfo channelInfo = CommonConst.MAPPED_CHANNEL.get(channel);
