@@ -8,5 +8,5 @@ import java.nio.channels.SocketChannel;
  * @description TODO
  */
 public interface IChannelSelector {
-    void registry(SocketChannel channel, int event);
+    void registry(int event, SocketChannel... channels);
 }

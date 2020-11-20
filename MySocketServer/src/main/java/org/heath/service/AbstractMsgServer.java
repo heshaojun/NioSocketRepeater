@@ -78,7 +78,7 @@ public abstract class AbstractMsgServer extends AbstractAutoManager {
             channel.configureBlocking(false);
             if (auth(channel)) {
                 log.info("客户端认证成功，开始注册读取事件");
-                channelRegister.registry(channel, SelectionKey.OP_READ);
+                channelRegister.registry(SelectionKey.OP_READ, channel);
             } else {
                 channel.close();
             }

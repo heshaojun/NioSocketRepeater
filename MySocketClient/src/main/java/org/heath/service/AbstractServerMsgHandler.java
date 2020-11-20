@@ -36,8 +36,6 @@ public abstract class AbstractServerMsgHandler implements IRunner {
                 if (data == null) continue;
                 if (!msgClientAutoManager.isWorking()) continue;
                 try {
-                    log.info("接受到到数据为：" + new String(data));
-                    //Map<String, String> map = MsgPackUtils.unpack(data);
                     Map<String, String> map = MsgPackUtils.secretUnpack(data, CommonProperties.serverKey);
                     if (map == null) throw new Exception("错误的数据包");
                     if (!CommonProperties.authId.equals(map.get(CommonConst.AUTH_ID))) throw new Exception("授权id不正确");

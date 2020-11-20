@@ -1,14 +1,8 @@
 package org.heath;
 
-import org.heath.common.CommonConst;
-import org.heath.common.CommonProperties;
-import org.heath.runner.DefaultDockHandler;
-import org.heath.runner.DefaultMsgChannelSelector;
-import org.heath.runner.DefaultMsgServer;
-import org.heath.runner.DefaultProxyServer;
+import org.heath.runner.*;
 import org.heath.service.MsgReadHandler;
-
-import java.util.Date;
+import org.heath.service.RepeatDataHandler;
 
 /**
  * @author heshaojun
@@ -18,15 +12,25 @@ import java.util.Date;
 public class ServerAppStarter {
     public static void main(String[] args) {
 
-        MsgReadHandler readHandler = new MsgReadHandler();
-        DefaultMsgChannelSelector msgChannelSelector = new DefaultMsgChannelSelector(readHandler);
+        //消息服务器通道注册
+        DefaultMsgChannelSelector msgChannelSelector = new DefaultMsgChannelSelector(new MsgReadHandler());
+        //消息服务器
         DefaultMsgServer msgServer = new DefaultMsgServer(msgChannelSelector);
+        //对接消息处理器
         DefaultDockHandler dockHandler = new DefaultDockHandler();
+        //代理服务器
         DefaultProxyServer proxyServer = new DefaultProxyServer();
+        //对接通道处理器
+        DefaultDockChannelSelector dockChannelSelector = new DefaultDockChannelSelector(new RepeatDataHandler());
+        //对接服务器
+        DefaultDockServer dockServer = new DefaultDockServer(dockChannelSelector);
+
         msgChannelSelector.boot();
         msgServer.boot();
         dockHandler.boot();
         proxyServer.boot();
+        dockChannelSelector.boot();
+        dockServer.boot();
         while (true) {
             try {
                 Thread.sleep(60);

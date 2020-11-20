@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @author heshaojun
  * @date 2020/11/18
- * @description TODO
+ * @description 获取对接消息队列中的对接信息，生成对接数据包，发送到消息客户端
  */
 @Log4j2
 public abstract class AbstractDockHandler implements IRunner {

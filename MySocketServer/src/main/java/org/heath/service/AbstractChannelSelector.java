@@ -54,7 +54,10 @@ public abstract class AbstractChannelSelector implements IChannelSelector, IRunn
                 log.info("启动过选择器线程：" + Thread.currentThread().getName());
                 while (true) {
                     try {
-                        if (selector.select(500) == 0) continue;
+                        if (selector.select() == 0) {
+                            Thread.sleep(20);
+                            continue;
+                        }
                         Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
                         while (keys.hasNext()) {
                             SelectionKey key = keys.next();
@@ -72,11 +75,11 @@ public abstract class AbstractChannelSelector implements IChannelSelector, IRunn
     /**
      * 通道注册入口，暴露给使用者注册通道事件，实现采用最小注册量优先注册的方式
      *
-     * @param channel 将要注册的通道
-     * @param event   关注的事件
+     * @param channels 将要注册的通道
+     * @param event    关注的事件
      */
     @Override
-    public void registry(SocketChannel channel, int event) {
+    public void registry(int event, SocketChannel... channels) {
         int location = 0;
         int index = 0;
         int minSize = Integer.MAX_VALUE;
@@ -91,7 +94,9 @@ public abstract class AbstractChannelSelector implements IChannelSelector, IRunn
         Selector selector = selectors.get(location);
         try {
             selector.wakeup();//唤醒阻塞选择器，避免过长阻塞
-            channel.register(selector, event);
+            for (SocketChannel channel : channels) {
+                channel.register(selector, event);
+            }
             log.info("注册通道事件到消息选择器上成功");
         } catch (Exception e) {
             e.printStackTrace();

@@ -19,6 +19,11 @@ public class DefaultServerMsgHandler extends AbstractServerMsgHandler {
 
     protected void handleDock(String id) {
         log.debug("接收到对接信息，开始进行对接" + id);
+        try {
+            CommonConst.DOCK_MSG_QUEUE.put(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected void handleCMD(String cmd) {
