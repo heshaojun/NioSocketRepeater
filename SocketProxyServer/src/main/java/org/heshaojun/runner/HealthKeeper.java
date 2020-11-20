@@ -18,8 +18,8 @@ public class HealthKeeper implements IRunner {
 
     public HealthKeeper() {
         this.msgClientTimeout = Long.valueOf(System.getProperty("msg.client.timeout", "" + (30 * 1000)));
-        this.cachedChannelTimeout = Long.valueOf(System.getProperty("cached.channel.timeout", "" + (5 * 1000)));
-        this.mappedChannelTimeout = Long.valueOf(System.getProperty("mapped.channel.timeout", "" + (10 * 1000)));
+        this.cachedChannelTimeout = Long.valueOf(System.getProperty("cached.channel.timeout", "" + (10 * 1000)));
+        this.mappedChannelTimeout = Long.valueOf(System.getProperty("mapped.channel.timeout", "" + (30 * 1000)));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class HealthKeeper implements IRunner {
                 checkCachedChannel();
                 checkMappedChannel();
             }
-        }, 100, 3 * 1000);
+        }, 100, 5 * 1000);
     }
 
     private void checkMsgClient() {
