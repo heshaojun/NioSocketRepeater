@@ -33,7 +33,7 @@ public class CommonConst {
     public static final ArrayBlockingQueue<byte[]> SERVER_MSG_QUEUE = new ArrayBlockingQueue<byte[]>(Integer.valueOf(System.getProperty("server.msg.queue", "100")));
     public static final ArrayBlockingQueue<byte[]> CLIENT_MSG_QUEUE = new ArrayBlockingQueue<byte[]>(Integer.valueOf(System.getProperty("client.msg.queue", "100")));
     public static final ArrayBlockingQueue<String> DOCK_MSG_QUEUE = new ArrayBlockingQueue<String>(Integer.valueOf(System.getProperty("server.msg.queue", "100")));
-    public static final int REPEAT_BUFF_SIZE = Integer.valueOf(System.getProperty("repeat.buff.size", "" + (1024 * 1024)));
+    public static final int REPEAT_BUFF_SIZE = Integer.valueOf(System.getProperty("repeat.buff.size", "" + (5*1024 * 1024)));
 
 
     public static final Hashtable<SocketChannel, ChannelInfo> MAPPED_CHANNEL = new Hashtable<>(300);
