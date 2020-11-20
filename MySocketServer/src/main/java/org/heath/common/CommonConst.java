@@ -1,7 +1,9 @@
 package org.heath.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.naming.ldap.SortKey;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
@@ -34,6 +36,7 @@ public class CommonConst {
     //消息通道映射表
     public static final Hashtable<SocketChannel, MsgClientInfo> MSG_CLIENT_INFO_MAP = new Hashtable<>(20);
 
+
     @Data
     public static class MsgClientInfo {
         private SocketChannel channel;
@@ -51,6 +54,18 @@ public class CommonConst {
             this.refreshTime = new Date().getTime();
             this.buffer = ByteBuffer.allocateDirect(CommonProperties.PACK_SIZE);
         }
+    }
 
+    public static final Hashtable<String, CachedChannelInfo> CACHED_CHANNEL_INFO_MAP = new Hashtable<>(100);
+
+    @Data
+    public static class CachedChannelInfo {
+        private SocketChannel channel;
+        private long refreshTime;
+
+        public CachedChannelInfo(SocketChannel channel) {
+            this.channel = channel;
+            this.refreshTime = new Date().getTime();
+        }
     }
 }

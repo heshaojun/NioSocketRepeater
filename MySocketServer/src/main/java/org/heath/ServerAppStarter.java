@@ -5,6 +5,7 @@ import org.heath.common.CommonProperties;
 import org.heath.runner.DefaultDockHandler;
 import org.heath.runner.DefaultMsgChannelSelector;
 import org.heath.runner.DefaultMsgServer;
+import org.heath.runner.DefaultProxyServer;
 import org.heath.service.MsgReadHandler;
 
 import java.util.Date;
@@ -21,13 +22,14 @@ public class ServerAppStarter {
         DefaultMsgChannelSelector msgChannelSelector = new DefaultMsgChannelSelector(readHandler);
         DefaultMsgServer msgServer = new DefaultMsgServer(msgChannelSelector);
         DefaultDockHandler dockHandler = new DefaultDockHandler();
+        DefaultProxyServer proxyServer = new DefaultProxyServer();
         msgChannelSelector.boot();
         msgServer.boot();
         dockHandler.boot();
+        proxyServer.boot();
         while (true) {
             try {
                 Thread.sleep(60);
-                CommonConst.DOCK_MSG_QUEUE.put("" + new Date().getTime());
             } catch (Exception e) {
             }
         }
