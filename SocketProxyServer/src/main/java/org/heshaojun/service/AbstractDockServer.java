@@ -1,6 +1,7 @@
 package org.heshaojun.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.heshaojun.common.CommonProperties;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -22,8 +23,8 @@ public abstract class AbstractDockServer extends AbstractAutoManager {
 
     public AbstractDockServer(IChannelSelector channelRegister) {
         this.channelRegister = channelRegister;
-        this.port = Integer.valueOf(System.getProperty("dock.server.port", "9999"));
-        this.logback = Integer.valueOf(System.getProperty("dock.server.logback", "10"));
+        this.port = CommonProperties.DOCK_SERVER_PORT;
+        this.logback = CommonProperties.DOCK_SERVER_LOGBACK;
     }
 
     @Override

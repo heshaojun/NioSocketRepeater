@@ -1,5 +1,6 @@
 package org.heshaojun.runner;
 
+import org.heshaojun.common.CommonProperties;
 import org.heshaojun.service.AbstractChannelSelector;
 import org.heshaojun.service.IEventHandler;
 
@@ -15,6 +16,6 @@ public class DefaultDockChannelSelector extends AbstractChannelSelector {
 
     @Override
     protected int getSelectorSize() {
-        return Integer.valueOf(System.getProperty("dock.register.size", "2"));
+        return CommonProperties.DOCK_REGISTER_SIZE;
     }
 }

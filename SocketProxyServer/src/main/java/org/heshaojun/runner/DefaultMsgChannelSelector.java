@@ -1,5 +1,6 @@
 package org.heshaojun.runner;
 
+import org.heshaojun.common.CommonProperties;
 import org.heshaojun.service.AbstractChannelSelector;
 import org.heshaojun.service.IEventHandler;
 
@@ -16,6 +17,6 @@ public class DefaultMsgChannelSelector extends AbstractChannelSelector {
 
     @Override
     protected int getSelectorSize() {
-        return Integer.valueOf(System.getProperty("msg.register.size", "1"));
+        return CommonProperties.MSG_REGISTER_SIZE;
     }
 }

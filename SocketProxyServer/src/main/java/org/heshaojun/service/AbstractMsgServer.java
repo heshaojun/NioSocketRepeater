@@ -1,6 +1,7 @@
 package org.heshaojun.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.heshaojun.common.CommonProperties;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -22,8 +23,8 @@ public abstract class AbstractMsgServer extends AbstractAutoManager {
 
     public AbstractMsgServer(IChannelSelector channelRegister) {
         this.channelRegister = channelRegister;
-        this.port = Integer.valueOf(System.getProperty("msg.server.port", "8888"));
-        this.logback = Integer.valueOf(System.getProperty("msg.server.logback", "10"));
+        this.port = CommonProperties.MSG_SERVER_PORT;
+        this.logback = CommonProperties.MSG_SERVER_LOGBACK;
     }
 
     @Override

@@ -15,6 +15,6 @@ public class DefaultDockChannelSelector extends AbstractChannelSelector {
 
     @Override
     protected int getSelectorSize() {
-        return Integer.valueOf(System.getProperty("dock.register.size", "2"));
+        return Integer.valueOf(System.getProperty("dock.register.size", "4"));
     }
 }

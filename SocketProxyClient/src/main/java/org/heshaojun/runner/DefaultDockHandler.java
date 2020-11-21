@@ -29,10 +29,10 @@ public class DefaultDockHandler extends AbstractDockHandler {
 
     public DefaultDockHandler(IChannelSelector channelSelector) {
         super(channelSelector);
-        this.dockPort = Integer.valueOf(System.getProperty("dock.port", "9999"));
-        this.serverIp = System.getProperty("server.ip", "127.0.0.1");
-        this.targetPort = Integer.valueOf(System.getProperty("target.port", "80"));
-        this.targetIp = System.getProperty("target.ip", "61.128.226.218");
+        this.dockPort = CommonProperties.DOCK_PORT;
+        this.serverIp = CommonProperties.SERVER_IP;
+        this.targetPort = CommonProperties.TARGET_PORT;
+        this.targetIp = CommonProperties.TARGET_IP;
     }
 
     @Override

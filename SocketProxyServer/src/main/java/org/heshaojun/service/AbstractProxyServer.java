@@ -1,6 +1,7 @@
 package org.heshaojun.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.heshaojun.common.CommonProperties;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -19,8 +20,8 @@ public abstract class AbstractProxyServer extends AbstractAutoManager {
     private int logback;
 
     public AbstractProxyServer() {
-        this.port = Integer.valueOf(System.getProperty("proxy.server.port", "8080"));
-        this.logback = Integer.valueOf(System.getProperty("proxy.server.logback", "100"));
+        this.port = CommonProperties.PROXY_SERVER_PORT;
+        this.logback = CommonProperties.PROXY_SERVER_LOGBACK;
     }
 
     @Override

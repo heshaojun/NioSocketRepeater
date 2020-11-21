@@ -30,8 +30,8 @@ public abstract class AbstractMsgClient extends AbstractAutoManager {
     }
 
     public AbstractMsgClient() {
-        this.port = Integer.valueOf(System.getProperty("msg.port", "8888"));
-        this.ip = System.getProperty("server.ip", "127.0.0.1");
+        this.port = CommonProperties.MSG_PORT;
+        this.ip = CommonProperties.SERVER_IP;
     }
 
     @Override
