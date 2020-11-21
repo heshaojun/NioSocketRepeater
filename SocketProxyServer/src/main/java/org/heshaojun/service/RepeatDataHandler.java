@@ -33,9 +33,12 @@ public class RepeatDataHandler implements IEventHandler {
                 }
                 buffer.clear();
             } catch (Exception e) {
-                e.printStackTrace();
                 try {
                     channel.close();
+                } catch (Exception e1) {
+                }
+                try {
+                    CommonConst.MAPPED_CHANNEL.get(channel).destroy();
                 } catch (Exception e1) {
                 }
             }
