@@ -39,7 +39,7 @@ public abstract class AbstractDockHandler implements IRunner {
                         Thread.sleep(100);
                         continue;
                     }
-                    int index = dockerId.hashCode() % CommonConst.MSG_CLIENT_INFO_MAP.size();
+                    int index = Math.abs(dockerId.hashCode()) % CommonConst.MSG_CLIENT_INFO_MAP.size();
                     CommonConst.MSG_CLIENT_INFO_MAP.entrySet();
                     Map.Entry<SocketChannel, CommonConst.MsgClientInfo> entry = (Map.Entry<SocketChannel, CommonConst.MsgClientInfo>) CommonConst.MSG_CLIENT_INFO_MAP.entrySet().toArray()[index];
                     CommonConst.MsgClientInfo clientInfo = entry.getValue();
