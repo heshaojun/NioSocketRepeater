@@ -24,7 +24,7 @@ public class CommonProperties {
     public static volatile byte[] serverKey = null;
     public static volatile byte[] clientKey = null;
 
-    public static final Key RSA_KEY = RSAUtils.getPubKey(CertificateUtils.loadKey(System.getProperty("cert.filename", "rsa.pub"), System.getProperty("cert.password", "12345678")));
+    public static final Key RSA_KEY = RSAUtils.getPubKey(CertificateUtils.loadKey(System.getProperty("cert.filename", "rsa.pub"), System.getProperty("cert.password", "8cc8ec27")));
 
 
 }

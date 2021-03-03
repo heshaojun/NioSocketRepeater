@@ -32,7 +32,7 @@ public class CommonConst {
 
     public static final ArrayBlockingQueue<String> DOCK_MSG_QUEUE = new ArrayBlockingQueue<String>(Integer.valueOf(System.getProperty("dock.msg.queue", "100")));
     public static final ArrayBlockingQueue<byte[]> CLIENT_MSG_QUEUE = new ArrayBlockingQueue<byte[]>(Integer.valueOf(System.getProperty("client.msg.queue", "100")));
-    public static final int REPEAT_BUFF_SIZE = Integer.valueOf(System.getProperty("repeat.buff.size", "" + (5*1024 * 1024)));
+    public static final int REPEAT_BUFF_SIZE = Integer.valueOf(System.getProperty("repeat.buff.size", "" + (5 * 1024 * 1024)));
     //消息通道映射表
     public static final Hashtable<SocketChannel, MsgClientInfo> MSG_CLIENT_INFO_MAP = new Hashtable<>(20);
 
@@ -125,6 +125,22 @@ public class CommonConst {
         private SocketChannel mapped;
         private ByteBuffer buffer;
         private long refreshTime;
+
+        private volatile boolean lock = false;
+
+        public boolean lock() {
+            if (lock) {
+                return false;
+            } else {
+                lock = true;
+                return true;
+            }
+        }
+
+        public void unlock() {
+            lock = false;
+        }
+
 
         public ChannelInfo(SocketChannel self, SocketChannel mapped) {
             this.self = self;
